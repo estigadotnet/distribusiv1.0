@@ -39,6 +39,7 @@ $populasi         = "";
 $seleksi          = "";
 $co               = "";
 $mutasi           = "";
+$lewatPertama     = 1;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$jumlahKapal      = $_POST["jumlahKapal"];
@@ -181,13 +182,16 @@ for ($pop = 0; $pop < intval($populasi); $pop++) {
 	}
 }
 
-$durasi  = 0;
-$selisih = 0;
+$durasi       = 0;
+$selisih      = 0;
+$jumlahRepeat = 0;
+$sama         = 0;
 
 // penentuan jumlah looping berdasarkan stopping criteria
 if ($stopping == 'generasi') {
 }
 elseif ($stopping == 'repeat') {
+	$jumlahRepeat = $generasi;
 	$generasi = 1000000;
 }
 elseif ($stopping == 'time') {
@@ -465,26 +469,24 @@ for ($g = 0; $g <= $generasi; $g++) {
 	$kProses = $kMutasi;
 
 
-		// check stopping criteria "time"
-		$end = microtime(true);
-		$selisih += $end - $start;
-		if ($stopping == "time") {
-			if ($selisih >= $durasi) {
-				$generasi = $g;
-			}
-		}
-
-		/*
-		echo "<pre>";
-		echo "start    : ".$start."<br>";
-		echo "end      : ".$end."<br>";
-		echo "selisih  : ".$selisih."<br>";
-		echo "durasi   : ".$durasi."<br>";
-		echo "generasi : ".$generasi."<br>";
-		echo "g        : ".$g."<br>";
-		echo "</pre>";
-		*/
+	// check stopping criteria "time"
+	$end = microtime(true);
+	$selisih += $end - $start;
+	if ($stopping == "time") {
+		if (_SRD_) echo "<pre>";
+		if (_SRD_) echo "start    : ".$start."<br>";
+		if (_SRD_) echo "end      : ".$end."<br>";
+		if (_SRD_) echo "selisih  : ".$selisih."<br>";
+		if (_SRD_) echo "durasi   : ".$durasi."<br>";
+		if (_SRD_) echo "generasi : ".$generasi."<br>";
+		if (_SRD_) echo "g        : ".$g."<br>";
+		if (_SRD_) echo "</pre>";
 		//die("break check");
+		if ($selisih >= $durasi) {
+			$generasi = $g; // trigger untuk exit for
+		}
+	}
+
 
 	}
 	// end if ($g < $generasi) {
@@ -510,23 +512,43 @@ for ($g = 0; $g <= $generasi; $g++) {
 					$total_cfAcuan = $total_cf[$index_key[0]];
 					$fitnessAcuan  = (_MP_ == 'max' ? max($fitness) : min($fitness));
 					$kromosomAcuan = serialize($kProses[$index_key[0]]);
+					$sama = 0;
 				}
 				else {
+					$sama++;
 				}
 			}
 			else {
 				if ($fitness[$index_key[0]] > $fitnessAcuan) {
+					$sama++;
 				}
 				else {
 					$total_tcAcuan = $total_tc[$index_key[0]];
 					$total_cfAcuan = $total_cf[$index_key[0]];
 					$fitnessAcuan  = (_MP_ == 'max' ? max($fitness) : min($fitness));
 					$kromosomAcuan = serialize($kProses[$index_key[0]]);
+					$sama = 0;
 				}
 			}
 		}
 	$q = $q . $total_tcAcuan.", ".$total_cfAcuan.", ".$fitnessAcuan.", '".$kromosomAcuan."', ".$g.")";
 	Execute($q); //echo $q; //die();
+
+	// checking repetition
+	if ($stopping == "repeat") {
+		if (_SRD_) echo "<pre>";
+		if (_SRD_) echo "lewat pertama : ".$lewatPertama."<br>";
+		if (_SRD_) echo "sama          : ".$sama."<br>";
+		if (_SRD_) echo "jumlahRepeat  : ".$jumlahRepeat."<br>";
+		if (_SRD_) echo "generasi      : ".$generasi."<br>";
+		if (_SRD_) echo "g             : ".$g."<br>";
+		if (_SRD_) echo "</pre>";
+		//die("break check");
+		if ($sama >= $jumlahRepeat) {
+			$generasi = $g; // trigger untuk exit for
+		}
+	}
+
 	
 }
 // ./loop berdasarkan jumlah $generasi
