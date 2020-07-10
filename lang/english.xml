@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2020/7/10" version="16.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2020/7/11" version="16.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!--
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -913,6 +913,12 @@
     <menu id="20">
       <phrase id="menutext" value="Hasil" />
     </menu>
+    <menu id="22">
+      <phrase id="menutext" value="Trial" />
+    </menu>
+    <menu id="23">
+      <phrase id="menutext" value="Trial 2" />
+    </menu>
     <menu id="14">
       <phrase id="menutext" value="v 101 kapaldistribusi" />
     </menu>
@@ -937,11 +943,43 @@
     <table id="c006_bf2">
       <phrase id="tblcaption" value="Result" />
     </table>
+    <table id="c997_trialscript2">
+      <phrase id="tblcaption" value="Trial 2" />
+    </table>
+    <table id="c998_trialscript">
+      <phrase id="tblcaption" value="Trial" />
+    </table>
     <table id="c999_backupscript">
       <phrase id="tblcaption" value="Backup Script" />
     </table>
     <table id="report1">
       <phrase id="tblcaption" value="Grafik GA" />
+      <chart id="chart1">
+        <phrase id="chartcaption" value="Generasi vs Total Cost" />
+        <phrase id="chartxaxisname" value="Generasi" />
+        <phrase id="chartyaxisname" value="Total Cost" />
+      </chart>
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="generasi">
+        <phrase id="fldcaption" value="Generasi" />
+      </field>
+      <field id="kromosom">
+        <phrase id="fldcaption" value="Kromosom" />
+      </field>
+      <field id="totalcost">
+        <phrase id="fldcaption" value="Total Cost" />
+      </field>
+      <field id="totalcargo">
+        <phrase id="fldcaption" value="Total Cargo" />
+      </field>
+      <field id="fitness">
+        <phrase id="fldcaption" value="Fitness" />
+      </field>
+    </table>
+    <table id="report2">
+      <phrase id="tblcaption" value="Grafik Brute Force" />
       <chart id="chart1">
         <phrase id="chartcaption" value="Generasi vs Total Cost" />
         <phrase id="chartxaxisname" value="Generasi" />
@@ -1213,32 +1251,6 @@
       </field>
       <field id="jumlah">
         <phrase id="fldcaption" value="Jumlah" />
-      </field>
-    </table>
-    <table id="report2">
-      <phrase id="tblcaption" value="Grafik Brute Force" />
-      <chart id="chart1">
-        <phrase id="chartcaption" value="Generasi vs Total Cost" />
-        <phrase id="chartxaxisname" value="Generasi" />
-        <phrase id="chartyaxisname" value="Total Cost" />
-      </chart>
-      <field id="id">
-        <phrase id="fldcaption" value="id" />
-      </field>
-      <field id="generasi">
-        <phrase id="fldcaption" value="Generasi" />
-      </field>
-      <field id="kromosom">
-        <phrase id="fldcaption" value="Kromosom" />
-      </field>
-      <field id="totalcost">
-        <phrase id="fldcaption" value="Total Cost" />
-      </field>
-      <field id="totalcargo">
-        <phrase id="fldcaption" value="Total Cargo" />
-      </field>
-      <field id="fitness">
-        <phrase id="fldcaption" value="Fitness" />
       </field>
     </table>
   </project>

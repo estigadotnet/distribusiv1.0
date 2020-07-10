@@ -338,10 +338,8 @@ for ($g = 0; $g <= $generasi; $g++) {
 	if (_SRD_) echo "<br>";
 	if (_SRD_) echo "<br>";
 
-	
 
-	// if ($g < $generasi) {
-	if ($g < $generasi) {
+	if ($g < $generasi) { // if ($g < $generasi) {
 		
 	// seleksi
 	// buang 3 terendah, direplace dengan individu optimum
@@ -446,27 +444,13 @@ for ($g = 0; $g <= $generasi; $g++) {
 	if (_SRD_) echo "<br>";
 
 
-	// replacement
-	/*if (_SRD_) echo "<b>Hasil Replacement</b>";
-	if (_SRD_) echo "<br>";
-	for ($i = 0; $i < $pop; $i++) {
-		for ($j = 0; $j < $kap; $j++) {
-			$nilai = rand(1, 240) % 2;
-			if ($nilai == 1) {
-				$kMutasi[$i][$j] = 0;
-			}
-			if (_SRD_) echo $kMutasi[$i][$j].", ";
-		}
-		if (_SRD_) echo "<br>";
-	}
-	if (_SRD_) echo "<br>";*/
-
-
+	// replacement ada di sini sebelum nya
+	
 	if (_SRD_) echo "<br>";
 
 	// copykan hasil replacement ke kromosom baru untuk
 	// persiapan generasi berikutnya
-	$kProses = $kMutasi;
+	//$kProses = $kMutasi;
 
 
 	// check stopping criteria "time"
@@ -491,6 +475,65 @@ for ($g = 0; $g <= $generasi; $g++) {
 	}
 	// end if ($g < $generasi) {
 
+	// replacement
+	/*if (_SRD_) echo "<b>Hasil Replacement</b>";
+	if (_SRD_) echo "<br>";
+	for ($i = 0; $i < $pop; $i++) {
+		for ($j = 0; $j < $kap; $j++) {
+			$nilai = rand(1, 240) % 2;
+			if ($nilai == 1) {
+				$kMutasi[$i][$j] = 0;
+			}
+			if (_SRD_) echo $kMutasi[$i][$j].", ";
+		}
+		if (_SRD_) echo "<br>";
+	}
+	if (_SRD_) echo "<br>";*/
+	// create array per kapal
+	for ($k = 1; $k <= $jumlahKapal; $k++) {
+		for ($d = 1; $d <= $jumlahDistribusi; $d++) {
+			$arrKapal[$k][(($jumlahKapal * $d)-$jumlahKapal)+($k-1)] = $kMutasi[$index_key[0]][(($jumlahKapal * $d)-$jumlahKapal)+($k-1)];
+		}
+		//echo "<br>";
+	}
+	//echo "<pre>";
+	//print_r($arrKapal);
+	//echo "</pre>";
+
+	// check constraint per kapal
+	for ($k = 1; $k <= $jumlahKapal; $k++) {
+		//echo "array[".$k."] : ".array_sum($arrKapal[$k])."<br>";
+		$hasilSum = array_sum($arrKapal[$k]);
+		while ($hasilSum >= $rJumlah[$k-1][0]) {
+			// cari index terkecil
+			$indexKey = array_keys($arrKapal[$k], min(array_filter($arrKapal[$k], function($varx) {return $varx != 0;})));
+
+			// lakukan replacement 1 array menjadi 0
+			$arrKapal[$k][$indexKey[0]] = 0.00;
+			$kMutasi[$index_key[0]][$indexKey[0]] = 0.00;
+			$cargoterangkut[$index_key[0]][$indexKey[0]] = 0.00;
+				
+			// lalu di-sum lagi
+			$hasilSum = array_sum($arrKapal[$k]);
+			//echo "array[".$k."] : ".array_sum($arrKapal[$k])." - setelah replacement<br>";
+		}
+		//echo "array[".$k."] : ".array_sum($arrKapal[$k])." - setelah replacement<br>";
+	}
+	//echo "<br>";
+	//echo "<pre>";
+	//print_r($arrKapal);
+	//echo "</pre>";
+
+	// check constraint total distribusi, harus di bawah demand
+	$sumCargo = array_sum($cargoterangkut[$index_key[0]]); //echo $sumCargo." - ".ExecuteScalar("select Nilai from t006_parameter where Nama = 'Demand'");
+	while ($sumCargo >= ExecuteScalar("select Nilai from t006_parameter where Nama = 'Demand'")) {
+		$indexKey = array_keys($cargoterangkut[$index_key[0]], max(array_filter($cargoterangkut[$index_key[0]], function($varx) {return $varx != 0;})));
+		$kMutasi[$index_key[0]][$indexKey[0]] = 0.00;
+		$cargoterangkut[$index_key[0]][$indexKey[0]] = 0.00;
+		$sumCargo = array_sum($cargoterangkut[$index_key[0]]);
+	}
+
+	$kProses = $kMutasi;
 
 	// simpan ke tabel, dengan cara seleksi
 	$q = "insert into
