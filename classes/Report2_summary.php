@@ -598,7 +598,39 @@ class Report2_summary extends Report2
 		} else {
 			$Security = new AdvancedSecurity();
 		}
+
+		// Get export parameters
+		$custom = "";
+		if (Param("export") !== NULL) {
+			$this->Export = Param("export");
+			$custom = Param("custom", "");
+		}
+		$ExportFileName = $this->TableVar; // Get export file, used in header
+
+		// Get custom export parameters
+		if ($this->isExport() && $custom != "") {
+			$this->CustomExport = $this->Export;
+			$this->Export = "print";
+		}
+		$CustomExportType = $this->CustomExport;
+		$ExportType = $this->Export; // Get export parameter, used in header
+		$ReportExportType = $ExportType; // Report export type, used in header
+
+		// Update Export URLs
+		if (Config("USE_PHPEXCEL"))
+			$this->ExportExcelCustom = FALSE;
+		if ($this->ExportExcelCustom)
+			$this->ExportExcelUrl .= "&amp;custom=1";
+		if (Config("USE_PHPWORD"))
+			$this->ExportWordCustom = FALSE;
+		if ($this->ExportWordCustom)
+			$this->ExportWordUrl .= "&amp;custom=1";
+		if ($this->ExportPdfCustom)
+			$this->ExportPdfUrl .= "&amp;custom=1";
 		$this->CurrentAction = Param("action"); // Set up current action
+
+		// Setup export options
+		$this->setupExportOptions();
 
 		// Global Page Loading event (in userfn*.php)
 		Page_Loading();
@@ -1040,7 +1072,7 @@ class Report2_summary extends Report2
 		// Export to Pdf
 		$item = &$this->ExportOptions->add("pdf");
 		$item->Body = $this->getExportTag("pdf");
-		$item->Visible = FALSE;
+		$item->Visible = TRUE;
 
 		// Export to Email
 		$item = &$this->ExportOptions->add("email");

@@ -10,6 +10,7 @@
 <link rel="stylesheet" type="text/css" href="<?php echo $RELATIVE_PATH ?><?php echo CssFile(Config("PDF_STYLESHEET_FILENAME")) ?>">
 <?php } ?>
 <?php } ?>
+<?php if (!IsExport() || IsExport("print")) { ?>
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link rel="stylesheet" type="text/css" href="<?php echo $RELATIVE_PATH ?>adminlte3/css/<?php echo CssFile("adminlte.css") ?>">
 <link rel="stylesheet" type="text/css" href="<?php echo $RELATIVE_PATH ?>plugins/fontawesome-free/css/all.min.css">
@@ -210,10 +211,12 @@ loadjs.ready("head", function() {
 <script type="text/html" class="ew-js-template" data-name="languages" data-seq="10" data-data="languages" data-method="<?php echo $Language->Method ?>" data-target="<?php echo HtmlEncode($Language->Target) ?>">
 <?php echo $Language->getTemplate() ?>
 </script>
+<?php } ?>
 <meta name="generator" content="PHPMaker 2020">
 </head>
 <body class="<?php echo Config("BODY_CLASS") ?>" dir="<?php echo Config("CSS_FLIP") ? "rtl" : "ltr" ?>">
 <?php if (@!$SkipHeaderFooter) { ?>
+<?php if (!IsExport()) { ?>
 <div class="wrapper ew-layout">
 	<!-- Main Header -->
 	<!-- Navbar -->
@@ -266,4 +269,5 @@ loadjs.ready("head", function() {
 		<!-- Main content -->
 		<section class="content">
 		<div class="container-fluid">
+<?php } ?>
 <?php } ?>

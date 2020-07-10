@@ -65,31 +65,9 @@ if (!$Report2_summary->DrillDownInPanel) {
 $Report2_summary->showMessage();
 ?>
 <?php if ((!$Report2_summary->isExport() || $Report2_summary->isExport("print")) && !$DashboardReport) { ?>
+<!-- Top Container -->
 <div class="row">
-<?php } ?>
-<?php if ((!$Report2_summary->isExport() || $Report2_summary->isExport("print")) && !$DashboardReport) { ?>
-<!-- Center Container -->
-<div id="ew-center" class="<?php echo $Report2_summary->CenterContentClass ?>">
-<?php } ?>
-<!-- Summary report (begin) -->
-<div id="report_summary">
-<?php if (!$Report2_summary->isExport() && !$Report2_summary->DrillDown && !$DashboardReport) { ?>
-<?php } ?>
-</div>
-<!-- /#report-summary -->
-<!-- Summary report (end) -->
-<?php if ((!$Report2_summary->isExport() || $Report2_summary->isExport("print")) && !$DashboardReport) { ?>
-</div>
-<!-- /#ew-center -->
-<?php } ?>
-<?php if ((!$Report2_summary->isExport() || $Report2_summary->isExport("print")) && !$DashboardReport) { ?>
-</div>
-<!-- /.row -->
-<?php } ?>
-<?php if ((!$Report2_summary->isExport() || $Report2_summary->isExport("print")) && !$DashboardReport) { ?>
-<!-- Bottom Container -->
-<div class="row">
-	<div id="ew-bottom" class="<?php echo $Report2_summary->BottomContentClass ?>">
+	<div id="ew-top" class="<?php echo $Report2_summary->TopContentClass ?>">
 <?php } ?>
 <?php
 if (!$DashboardReport) {
@@ -99,7 +77,7 @@ if (!$DashboardReport) {
 
 		// Page_Breaking server event
 		$Report2_summary->Page_Breaking($Report2_summary->ExportChartPageBreak, $Report2_summary->PageBreakContent);
-		$Report2->Chart1->PageBreakType = ""; // Page break type
+		$Report2->Chart1->PageBreakType = "after"; // Page break type
 		$Report2->Chart1->PageBreak = $Report2_summary->ExportChartPageBreak;
 		$Report2->Chart1->PageBreakContent = $Report2_summary->PageBreakContent;
 	}
@@ -109,15 +87,36 @@ if (!$DashboardReport) {
 	$Report2->Chart1->render("ew-chart-top");
 }
 ?>
-<?php if (!$DashboardReport && !$Report2_summary->isExport("email") && !$Report2_summary->DrillDown && $Report2->Chart1->hasData()) { ?>
-<?php if (!$Report2_summary->isExport()) { ?>
-<div class="mb-3"><a href="#" class="ew-top-link" onclick="$(document).scrollTop($('#top').offset().top); return false;"><?php echo $Language->phrase("Top") ?></a></div>
-<?php } ?>
-<?php } ?>
 <?php if ((!$Report2_summary->isExport() || $Report2_summary->isExport("print")) && !$DashboardReport) { ?>
 	</div>
 </div>
-<!-- /#ew-bottom -->
+<!-- /#ew-top -->
+<?php } ?>
+<?php if ((!$Report2_summary->isExport() || $Report2_summary->isExport("print")) && !$DashboardReport) { ?>
+<div class="row">
+<?php } ?>
+<?php if ((!$Report2_summary->isExport() || $Report2_summary->isExport("print")) && !$DashboardReport) { ?>
+<!-- Center Container -->
+<div id="ew-center" class="<?php echo $Report2_summary->CenterContentClass ?>">
+<?php } ?>
+<!-- Summary report (begin) -->
+<?php if (!$Report2_summary->isExport("pdf")) { ?>
+<div id="report_summary">
+<?php } ?>
+<?php if (!$Report2_summary->isExport() && !$Report2_summary->DrillDown && !$DashboardReport) { ?>
+<?php } ?>
+<?php if (!$Report2_summary->isExport("pdf")) { ?>
+</div>
+<!-- /#report-summary -->
+<?php } ?>
+<!-- Summary report (end) -->
+<?php if ((!$Report2_summary->isExport() || $Report2_summary->isExport("print")) && !$DashboardReport) { ?>
+</div>
+<!-- /#ew-center -->
+<?php } ?>
+<?php if ((!$Report2_summary->isExport() || $Report2_summary->isExport("print")) && !$DashboardReport) { ?>
+</div>
+<!-- /.row -->
 <?php } ?>
 <?php if ((!$Report2_summary->isExport() || $Report2_summary->isExport("print")) && !$DashboardReport) { ?>
 </div>

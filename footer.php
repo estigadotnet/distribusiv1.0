@@ -1,4 +1,5 @@
 <?php namespace PHPMaker2020\p_distribusi; ?>
+<?php if (!IsExport()) { ?>
 <?php if (@!$SkipHeaderFooter) { ?>
 		<?php if (isset($DebugTimer)) $DebugTimer->stop() ?>
 		</div><!-- /.container-fluid -->
@@ -115,6 +116,8 @@
 <!-- drill down -->
 <div id="ew-drilldown-panel"></div>
 <?php } ?>
+<?php } ?>
+<?php if (!IsExport() || IsExport("print")) { ?>
 <script>
 
 // User event handlers
@@ -126,5 +129,6 @@ ew.ready(ew.bundleIds, "<?php echo $RELATIVE_PATH ?>js/userevt.js", "load", func
 
 });
 </script>
+<?php } ?>
 </body>
 </html>

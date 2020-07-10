@@ -743,6 +743,42 @@ class t002_kapaldetail_list extends t002_kapaldetail
 
 		// Create form object
 		$CurrentForm = new HttpForm();
+
+		// Get export parameters
+		$custom = "";
+		if (Param("export") !== NULL) {
+			$this->Export = Param("export");
+			$custom = Param("custom", "");
+		} elseif (IsPost()) {
+			if (Post("exporttype") !== NULL)
+				$this->Export = Post("exporttype");
+			$custom = Post("custom", "");
+		} elseif (Get("cmd") == "json") {
+			$this->Export = Get("cmd");
+		} else {
+			$this->setExportReturnUrl(CurrentUrl());
+		}
+		$ExportFileName = $this->TableVar; // Get export file, used in header
+
+		// Get custom export parameters
+		if ($this->isExport() && $custom != "") {
+			$this->CustomExport = $this->Export;
+			$this->Export = "print";
+		}
+		$CustomExportType = $this->CustomExport;
+		$ExportType = $this->Export; // Get export parameter, used in header
+
+		// Update Export URLs
+		if (Config("USE_PHPEXCEL"))
+			$this->ExportExcelCustom = FALSE;
+		if ($this->ExportExcelCustom)
+			$this->ExportExcelUrl .= "&amp;custom=1";
+		if (Config("USE_PHPWORD"))
+			$this->ExportWordCustom = FALSE;
+		if ($this->ExportWordCustom)
+			$this->ExportWordUrl .= "&amp;custom=1";
+		if ($this->ExportPdfCustom)
+			$this->ExportPdfUrl .= "&amp;custom=1";
 		$this->CurrentAction = Param("action"); // Set up current action
 
 		// Get grid add count
@@ -752,6 +788,9 @@ class t002_kapaldetail_list extends t002_kapaldetail
 
 		// Set up list options
 		$this->setupListOptions();
+
+		// Setup export options
+		$this->setupExportOptions();
 		$this->id->Visible = FALSE;
 		$this->kapal_id->Visible = FALSE;
 		$this->Payload->setVisibility();
@@ -957,6 +996,12 @@ class t002_kapaldetail_list extends t002_kapaldetail
 		} else {
 			$this->setSessionWhere($filter);
 			$this->CurrentFilter = "";
+		}
+
+		// Export data only
+		if (!$this->CustomExport && in_array($this->Export, array_keys(Config("EXPORT_CLASSES")))) {
+			$this->exportData();
+			$this->terminate();
 		}
 		if ($this->isGridAdd()) {
 			$this->CurrentFilter = "0=1";
@@ -2935,6 +2980,97 @@ class t002_kapaldetail_list extends t002_kapaldetail
 		return $addRow;
 	}
 
+	// Get export HTML tag
+	protected function getExportTag($type, $custom = FALSE)
+	{
+		global $Language;
+		if (SameText($type, "excel")) {
+			if ($custom)
+				return "<a href=\"#\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" onclick=\"return ew.export(document.ft002_kapaldetaillist, '" . $this->ExportExcelUrl . "', 'excel', true);\">" . $Language->phrase("ExportToExcel") . "</a>";
+			else
+				return "<a href=\"" . $this->ExportExcelUrl . "\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\">" . $Language->phrase("ExportToExcel") . "</a>";
+		} elseif (SameText($type, "word")) {
+			if ($custom)
+				return "<a href=\"#\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" onclick=\"return ew.export(document.ft002_kapaldetaillist, '" . $this->ExportWordUrl . "', 'word', true);\">" . $Language->phrase("ExportToWord") . "</a>";
+			else
+				return "<a href=\"" . $this->ExportWordUrl . "\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\">" . $Language->phrase("ExportToWord") . "</a>";
+		} elseif (SameText($type, "pdf")) {
+			if ($custom)
+				return "<a href=\"#\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" onclick=\"return ew.export(document.ft002_kapaldetaillist, '" . $this->ExportPdfUrl . "', 'pdf', true);\">" . $Language->phrase("ExportToPDF") . "</a>";
+			else
+				return "<a href=\"" . $this->ExportPdfUrl . "\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\">" . $Language->phrase("ExportToPDF") . "</a>";
+		} elseif (SameText($type, "html")) {
+			return "<a href=\"" . $this->ExportHtmlUrl . "\" class=\"ew-export-link ew-html\" title=\"" . HtmlEncode($Language->phrase("ExportToHtmlText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToHtmlText")) . "\">" . $Language->phrase("ExportToHtml") . "</a>";
+		} elseif (SameText($type, "xml")) {
+			return "<a href=\"" . $this->ExportXmlUrl . "\" class=\"ew-export-link ew-xml\" title=\"" . HtmlEncode($Language->phrase("ExportToXmlText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToXmlText")) . "\">" . $Language->phrase("ExportToXml") . "</a>";
+		} elseif (SameText($type, "csv")) {
+			return "<a href=\"" . $this->ExportCsvUrl . "\" class=\"ew-export-link ew-csv\" title=\"" . HtmlEncode($Language->phrase("ExportToCsvText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToCsvText")) . "\">" . $Language->phrase("ExportToCsv") . "</a>";
+		} elseif (SameText($type, "email")) {
+			$url = $custom ? ",url:'" . $this->pageUrl() . "export=email&amp;custom=1'" : "";
+			return '<button id="emf_t002_kapaldetail" class="ew-export-link ew-email" title="' . $Language->phrase("ExportToEmailText") . '" data-caption="' . $Language->phrase("ExportToEmailText") . '" onclick="ew.emailDialogShow({lnk:\'emf_t002_kapaldetail\', hdr:ew.language.phrase(\'ExportToEmailText\'), f:document.ft002_kapaldetaillist, sel:false' . $url . '});">' . $Language->phrase("ExportToEmail") . '</button>';
+		} elseif (SameText($type, "print")) {
+			return "<a href=\"" . $this->ExportPrintUrl . "\" class=\"ew-export-link ew-print\" title=\"" . HtmlEncode($Language->phrase("PrinterFriendlyText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("PrinterFriendlyText")) . "\">" . $Language->phrase("PrinterFriendly") . "</a>";
+		}
+	}
+
+	// Set up export options
+	protected function setupExportOptions()
+	{
+		global $Language;
+
+		// Printer friendly
+		$item = &$this->ExportOptions->add("print");
+		$item->Body = $this->getExportTag("print");
+		$item->Visible = FALSE;
+
+		// Export to Excel
+		$item = &$this->ExportOptions->add("excel");
+		$item->Body = $this->getExportTag("excel");
+		$item->Visible = FALSE;
+
+		// Export to Word
+		$item = &$this->ExportOptions->add("word");
+		$item->Body = $this->getExportTag("word");
+		$item->Visible = FALSE;
+
+		// Export to Html
+		$item = &$this->ExportOptions->add("html");
+		$item->Body = $this->getExportTag("html");
+		$item->Visible = FALSE;
+
+		// Export to Xml
+		$item = &$this->ExportOptions->add("xml");
+		$item->Body = $this->getExportTag("xml");
+		$item->Visible = FALSE;
+
+		// Export to Csv
+		$item = &$this->ExportOptions->add("csv");
+		$item->Body = $this->getExportTag("csv");
+		$item->Visible = FALSE;
+
+		// Export to Pdf
+		$item = &$this->ExportOptions->add("pdf");
+		$item->Body = $this->getExportTag("pdf");
+		$item->Visible = TRUE;
+
+		// Export to Email
+		$item = &$this->ExportOptions->add("email");
+		$item->Body = $this->getExportTag("email");
+		$item->Visible = FALSE;
+
+		// Drop down button for export
+		$this->ExportOptions->UseButtonGroup = TRUE;
+		$this->ExportOptions->UseDropDownButton = FALSE;
+		if ($this->ExportOptions->UseButtonGroup && IsMobile())
+			$this->ExportOptions->UseDropDownButton = TRUE;
+		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");
+
+		// Add group option item
+		$item = &$this->ExportOptions->add($this->ExportOptions->GroupOptionName);
+		$item->Body = "";
+		$item->Visible = FALSE;
+	}
+
 	// Set up search options
 	protected function setupSearchOptions()
 	{
@@ -2955,6 +3091,129 @@ class t002_kapaldetail_list extends t002_kapaldetail
 		// Hide search options
 		if ($this->isExport() || $this->CurrentAction)
 			$this->SearchOptions->hideAllOptions();
+	}
+
+	/**
+	 * Export data in HTML/CSV/Word/Excel/XML/Email/PDF format
+	 *
+	 * @param boolean $return Return the data rather than output it
+	 * @return mixed
+	 */
+	public function exportData($return = FALSE)
+	{
+		global $Language;
+		$utf8 = SameText(Config("PROJECT_CHARSET"), "utf-8");
+		$selectLimit = $this->UseSelectLimit;
+
+		// Load recordset
+		if ($selectLimit) {
+			$this->TotalRecords = $this->listRecordCount();
+		} else {
+			if (!$this->Recordset)
+				$this->Recordset = $this->loadRecordset();
+			$rs = &$this->Recordset;
+			if ($rs)
+				$this->TotalRecords = $rs->RecordCount();
+		}
+		$this->StartRecord = 1;
+
+		// Export all
+		if ($this->ExportAll) {
+			set_time_limit(Config("EXPORT_ALL_TIME_LIMIT"));
+			$this->DisplayRecords = $this->TotalRecords;
+			$this->StopRecord = $this->TotalRecords;
+		} else { // Export one page only
+			$this->setupStartRecord(); // Set up start record position
+
+			// Set the last record to display
+			if ($this->DisplayRecords <= 0) {
+				$this->StopRecord = $this->TotalRecords;
+			} else {
+				$this->StopRecord = $this->StartRecord + $this->DisplayRecords - 1;
+			}
+		}
+		if ($selectLimit)
+			$rs = $this->loadRecordset($this->StartRecord - 1, $this->DisplayRecords <= 0 ? $this->TotalRecords : $this->DisplayRecords);
+		$this->ExportDoc = GetExportDocument($this, "h");
+		$doc = &$this->ExportDoc;
+		if (!$doc)
+			$this->setFailureMessage($Language->phrase("ExportClassNotFound")); // Export class not found
+		if (!$rs || !$doc) {
+			RemoveHeader("Content-Type"); // Remove header
+			RemoveHeader("Content-Disposition");
+			$this->showMessage();
+			return;
+		}
+		if ($selectLimit) {
+			$this->StartRecord = 1;
+			$this->StopRecord = $this->DisplayRecords <= 0 ? $this->TotalRecords : $this->DisplayRecords;
+		}
+
+		// Call Page Exporting server event
+		$this->ExportDoc->ExportCustom = !$this->Page_Exporting();
+
+		// Export master record
+		if (Config("EXPORT_MASTER_RECORD") && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "t001_kapal") {
+			global $t001_kapal;
+			if (!isset($t001_kapal))
+				$t001_kapal = new t001_kapal();
+			$rsmaster = $t001_kapal->loadRs($this->DbMasterFilter); // Load master record
+			if ($rsmaster && !$rsmaster->EOF) {
+				$exportStyle = $doc->Style;
+				$doc->setStyle("v"); // Change to vertical
+				if (!$this->isExport("csv") || Config("EXPORT_MASTER_RECORD_FOR_CSV")) {
+					$doc->Table = &$t001_kapal;
+					$t001_kapal->exportDocument($doc, $rsmaster);
+					$doc->exportEmptyRow();
+					$doc->Table = &$this;
+				}
+				$doc->setStyle($exportStyle); // Restore
+				$rsmaster->close();
+			}
+		}
+		$header = $this->PageHeader;
+		$this->Page_DataRendering($header);
+		$doc->Text .= $header;
+		$this->exportDocument($doc, $rs, $this->StartRecord, $this->StopRecord, "");
+		$footer = $this->PageFooter;
+		$this->Page_DataRendered($footer);
+		$doc->Text .= $footer;
+
+		// Close recordset
+		$rs->close();
+
+		// Call Page Exported server event
+		$this->Page_Exported();
+
+		// Export header and footer
+		$doc->exportHeaderAndFooter();
+
+		// Clean output buffer (without destroying output buffer)
+		$buffer = ob_get_contents(); // Save the output buffer
+		if (!Config("DEBUG") && $buffer)
+			ob_clean();
+
+		// Write debug message if enabled
+		if (Config("DEBUG") && !$this->isExport("pdf"))
+			echo GetDebugMessage();
+
+		// Output data
+		if ($this->isExport("email")) {
+
+			// Export-to-email disabled
+		} else {
+			$doc->export();
+			if ($return) {
+				RemoveHeader("Content-Type"); // Remove header
+				RemoveHeader("Content-Disposition");
+				$content = ob_get_contents();
+				if ($content)
+					ob_clean();
+				if ($buffer)
+					echo $buffer; // Resume the output buffer
+				return $content;
+			}
+		}
 	}
 
 	// Set up master/detail based on QueryString

@@ -54,7 +54,7 @@ class Report1 extends ReportTable
 		$this->Dbid = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (report only)
-		$this->ExportPageOrientation = "portrait"; // Page orientation (PDF only)
+		$this->ExportPageOrientation = "landscape"; // Page orientation (PDF only)
 		$this->ExportPageSize = "a4"; // Page size (PDF only)
 		$this->ExportExcelPageOrientation = ""; // Page orientation (PhpSpreadsheet only)
 		$this->ExportExcelPageSize = ""; // Page size (PhpSpreadsheet only)
@@ -116,7 +116,7 @@ class Report1 extends ReportTable
 		$this->fields['Fitness'] = &$this->Fitness;
 
 		// Chart1
-		$this->Chart1 = new DbChart($this, 'Chart1', 'Chart1', 'Generasi', 'TotalCost', 1002, '', 0, 'SUM', 2400, 500);
+		$this->Chart1 = new DbChart($this, 'Chart1', 'Chart1', 'Generasi', 'TotalCost', 1002, '', 0, 'SUM', 1800, 500);
 		$this->Chart1->SortType = 0;
 		$this->Chart1->SortSequence = "";
 		$this->Chart1->SqlSelect = "SELECT `Generasi`, '', SUM(`TotalCost`) FROM ";
