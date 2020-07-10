@@ -40,6 +40,7 @@ $seleksi          = "";
 $co               = "";
 $mutasi           = "";
 $lewatPertama     = 1;
+$simpanPertama    = 1;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	$jumlahKapal      = $_POST["jumlahKapal"];
@@ -577,18 +578,35 @@ for ($g = 0; $g <= $generasi; $g++) {
 	$q = $q . $total_tcAcuan.", ".$total_cfAcuan.", ".$fitnessAcuan.", '".$kromosomAcuan."', ".$g.")";
 	Execute($q); //echo $q; //die();
 
+	if ($simpanPertama == 1) {
+		$simpanPertama = 2;
+		$kSimpan = $kromosomAcuan;
+		$simpanSama = 0;
+	}
+	if ($kSimpan == $kromosomAcuan) {
+		$simpanSama++;
+	}
+	else {
+		$kSimpan = $kromosomAcuan;
+		$simpanSama = 0;
+	}
+
 	// checking repetition
 	if ($stopping == "repeat") {
 		if (_SRD_) echo "<pre>";
 		if (_SRD_) echo "lewat pertama : ".$lewatPertama."<br>";
-		if (_SRD_) echo "sama          : ".$sama."<br>";
+		if (_SRD_) echo "simpanSama    : ".$simpanSama."<br>";
+		if (_SRD_) echo "kSimpan       : ".serialize($kSimpan)."<br>";
+		if (_SRD_) echo "kromosomAcuan : ".serialize($kromosomAcuan)."<br>";
+		if (_SRD_) echo "kS == kA      : ".($kSimpan == $kromosomAcuan)."<br>";
 		if (_SRD_) echo "jumlahRepeat  : ".$jumlahRepeat."<br>";
 		if (_SRD_) echo "generasi      : ".$generasi."<br>";
 		if (_SRD_) echo "g             : ".$g."<br>";
 		if (_SRD_) echo "</pre>";
 		//die("break check");
-		if ($sama >= $jumlahRepeat) {
-			$generasi = $g; // trigger untuk exit for
+		if ($simpanSama >= $jumlahRepeat) {
+			//$generasi = $g; // trigger untuk exit for
+			break;
 		}
 	}
 
