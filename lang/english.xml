@@ -857,7 +857,7 @@
     <phrase id="bodytitle" value="Distribusi v1.0" />
     <phrase id="footertext" value="&amp;copy;2020 Syalihbara. All rights reserved." />
     <menu id="21">
-      <phrase id="menutext" value="Report 2" />
+      <phrase id="menutext" value="Grafik Brute Force" />
     </menu>
     <menu id="17">
       <phrase id="menutext" value="Backup Script" />
@@ -902,7 +902,7 @@
       <phrase id="menutext" value="Hasil" />
     </menu>
     <menu id="16">
-      <phrase id="menutext" value="Grafik" />
+      <phrase id="menutext" value="Grafik GA" />
     </menu>
     <menu id="18">
       <phrase id="menutext" value="Compare" />
@@ -941,7 +941,7 @@
       <phrase id="tblcaption" value="Backup Script" />
     </table>
     <table id="report1">
-      <phrase id="tblcaption" value="Grafik" />
+      <phrase id="tblcaption" value="Grafik GA" />
       <chart id="chart1">
         <phrase id="chartcaption" value="Generasi vs Total Cost" />
         <phrase id="chartxaxisname" value="Generasi" />
@@ -1216,7 +1216,7 @@
       </field>
     </table>
     <table id="report2">
-      <phrase id="tblcaption" value="Report 2" />
+      <phrase id="tblcaption" value="Grafik Brute Force" />
       <chart id="chart1">
         <phrase id="chartcaption" value="Generasi vs Total Cost" />
         <phrase id="chartxaxisname" value="Generasi" />
