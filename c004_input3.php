@@ -183,6 +183,7 @@ elseif ($stopping == 'repeat') {
 	$generasi = 1000000;
 }
 elseif ($stopping == 'time') {
+	$nilaiDurasi = $generasi;
 	$durasi   = $generasi * 60;
 	$generasi = 1000000;
 }
@@ -568,30 +569,15 @@ for ($g = 0; $g <= $generasi; $g++) {
 	<!-- Parameter Distribusi -->
 	<div class="col-sm-4">
 		<!-- Loading -->
-		<div class="card mb-3">
+		<div class="card">
 			<div class="card-header">Parameter Distribusi</div>
 			<div class="card-body">
-				<div class="row">
-					<div class="col-lg-4">
-						<div class="p-2">
-							<!-- form -->
-							<form action="c004_input4.php" method="POST">
-							<input type="hidden" name="token" value="<?php echo CurrentPage()->Token; ?>">
-							<div class="form-group row">
-								Jumlah Kapal
-								<input type="text" name="jumlahKapal" class="form-control form-control-user" id="jumlahKapal" placeholder="" value="<?php echo $jumlahKapal; ?>" readonly>
-							</div>
-							<div class="form-group row">
-								Jumlah Distribusi
-								<input type="text" name="jumlahDistribusi" class="form-control form-control-user" id="jumlahDistribusi" placeholder="" value="<?php echo $jumlahDistribusi; ?>" readonly>
-							</div>
-							<div class="form-group row">
-								Jumlah Permintaan
-								<input type="text" name="jumlahPermintaan" class="form-control form-control-user" id="jumlahDistribusi" placeholder="" value="<?php echo $jumlahPermintaan; ?>" readonly>
-							</div>
-						</div>
-					</div>
-				</div>
+				<!-- form -->
+				<form action="c004_input4.php" method="POST">
+				<input type="hidden" name="token" value="<?php echo CurrentPage()->Token; ?>">
+				<div class="form-group row"><div class="col-4">Jumlah Kapal</div><div class="col-4"><?php echo $jumlahKapal; ?></div></div>
+				<div class="form-group row"><div class="col-4">Jumlah Distribusi</div><div class="col-4"><?php echo $jumlahDistribusi; ?></div></div>
+				<div class="form-group row"><div class="col-4">Jumlah Permintaan</div><div class="col-4"><?php echo $jumlahPermintaan; ?></div></div>
 			</div>
 		</div>
 	</div>
@@ -599,46 +585,28 @@ for ($g = 0; $g <= $generasi; $g++) {
 	
 	<!-- Operator GA -->
 	<div class="col-sm-8">
-		<div class="card mb-3">
+		<div class="card">
 			<div class="card-header">Operator GA</div>
 			<div class="card-body">
-				<div class="row">
-					<div class="col-lg-4">
-						<div class="p-2">
-							<div class="form-group row">
-								Generasi
-								<input type="text" name="generasi" class="form-control form-control-user" id="jumlahDepo" placeholder="" value="<?php echo $generasi; ?>" readonly>
-							</div>
-							<div class="form-group row">
-								Populasi
-								<input type="text" name="populasi" class="form-control form-control-user" id="jumlahDepo" placeholder="" value="<?php echo $populasi; ?>" readonly>
-							</div>
-							<div class="form-group row">
-								Prob. Seleksi
-								<input type="text" name="seleksi" class="form-control form-control-user" id="jumlahPengimpor" placeholder="" value="<?php echo $seleksi; ?>" readonly>
-							</div>
-							<div class="form-group row">
-								Prob. CO
-								<input type="text" name="co" class="form-control form-control-user" id="jumlahPengimpor" placeholder="" value="<?php echo $co; ?>" readonly>
-							</div>
-							<div class="form-group row">
-								Prob. Mutasi
-								<input type="text" name="mutasi" class="form-control form-control-user" id="jumlahPengimpor" placeholder="" value="<?php echo $mutasi; ?>" readonly>
-							</div>
-						</div>
-					</div>
-				</div>
+				<div class="form-group row"><div class="col-3">Stopping Criteria</div><div class="col-6"><?php echo ($stopping == 'generasi' ? "Generasi = ".$generasi : ($stopping == 'repeat' ? "Repetition Fitness Value = ".$jumlahRepeat : "Time (in minutes) = ".number_format($nilaiDurasi, 2))); ?></div></div>
+				<div class="form-group row"><div class="col-3">Generasi</div><div class="col-3"><?php echo $generasi; ?></div></div>
+				<div class="form-group row"><div class="col-3">Populasi</div><div class="col-3"><?php echo $populasi; ?></div></div>
+				<div class="form-group row"><div class="col-3">Prob. Seleksi</div><div class="col-3"><?php echo $seleksi; ?></div></div>
+				<div class="form-group row"><div class="col-3">Prob. CO</div><div class="col-3"><?php echo $co; ?></div></div>
+				<div class="form-group row"><div class="col-3">Prob. Mutasi</div><div class="col-3"><?php echo $mutasi; ?></div></div>
 			</div>
 		</div>
 	</div>
 	<!-- ./Operator GA -->
 
+</div>
+<div class="row">
+
 	<?php if ($jumlahKapal > 0 or $jumlahDistribusi > 0) { ?>
 			
 	<!-- proses total ke bawah -->
-	<?php $columnSize = 8; ?>
 	<div class="col-sm-12">
-		<div class="card mb-3">
+		<div class="card">
 			<div class="card-header">
 				Individu Optimum
 			</div>
@@ -646,109 +614,73 @@ for ($g = 0; $g <= $generasi; $g++) {
 					
 				<div class="row">
 							
-					<!-- tabel 1           -->
-					<!-- baris = pengimpor -->
-					<!-- kolom = depo      -->
+					<!-- tabel 1            -->
+					<!-- baris = distribusi -->
+					<!-- kolom = kapal      -->
 					<?php if ($jumlahDistribusi > 0) { ?>
 
-						<!-- kolom i1, i2, in -->
+						<!-- kolom d[1], d[2], d[n] -->
 						<!-- kolom pertama -->
 						<div class="col-sm-1">
-							<div class="p-2">
-								<div class="form-group row">
-									<input type="text" name="t1_A1" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+							<div class="p-1">
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row">
-									<input type="text" name="t1_A<?php echo $i+1; ?>" value="d<?php echo $i; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark text-center">d<?php echo $i; ?></div></div>
 								<?php } ?>
-								<div class="form-group row">
-									<input type="text" name="t1_A<?php echo $i+1; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
-								<div class="form-group row">
-									<input type="text" name="t1_A<?php echo $i+2; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 							</div>
 						</div>
 								
-						<!-- kolom d1, d2, dn -->
-						<!-- kolom kedua, kolom_n-1 -->
+						<!-- kolom d[1], d[2], d[n]  -->
+						<!-- kolom kedua, kolom[n-2] -->
 						<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-						<?php $totalCargo[$i] = 0; ?>
+						<?php   $totalCargo[$i] = 0; ?>
 						<?php } ?>
 						<?php for ($d = 1; $d <= $jumlahKapal; $d++) { ?>
-						<?php $row = 1; ?>
+						<?php   $row = 1; ?>
 						<div class="col-sm-1">
-							<div class="p-2">
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="k<?php echo $d; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+							<div class="p-1">
+								<div class="form-group row"><div class="col bg-light text-dark text-center">k<?php echo $d; ?></div></div>
 								<?php $totalKapal = 0; ?>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>">
-									<?php $totalKapal += $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-									<?php $totalCargo[$i] += $cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)], 2); ?></div></div>
+								<?php   $totalKapal += $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
+								<?php   $totalCargo[$i] += $cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php } ?>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo $totalKapal; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo $rJumlah[$d-1][0]?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalKapal); ?></div></div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($rJumlah[$d-1][0]); ?></div></div>
 							</div>
 						</div>
 						<?php } ?>
 
 						<!-- kolom sebelum terakhir -->
 						<div class="col-sm-1">
-							<div class="p-2">
-								<div class="form-group row">
-									<?php $row = 1; ?>
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+							<div class="p-1">
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
 								<?php $gtCargo = 0;?>
 								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row">
-									<!-- <input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo number_format($demand); ?>" class="form-control form-control-user" size="10" readonly> -->
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo $totalCargo[$i]; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-									<?php $gtCargo += $totalCargo[$i]; ?>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalCargo[$i]); ?></div></div>
+								<?php   $gtCargo += $totalCargo[$i]; ?>
 								<?php } ?>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo $gtCargo; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtCargo); ?></div></div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 							</div>
 						</div>
 								
 						<!-- kolom terakhir -->
 						<div class="col-sm-1">
-							<div class="p-2">
-								<div class="form-group row">
-									<?php $row = 1; ?>
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+							<div class="p-1">
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
 								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row">
-									<!-- <input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo number_format($demand); ?>" class="form-control form-control-user" size="10" readonly> -->
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo number_format($demand[$d-1][0]); ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($demand[$d-1][0]); ?></div></div>
 								<?php } ?>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 							</div>
 						</div>
 							
@@ -761,10 +693,12 @@ for ($g = 0; $g <= $generasi; $g++) {
 	</div>
 	<!-- end of proses total ke bawah -->
 
+</div>
+<div class="row">
+
 	<!-- total ke kanan -->
-	<?php $columnSize = 8; ?>
 	<div class="col-sm-12">
-		<div class="card mb-3">
+		<div class="card">
 			<div class="card-header">
 				Cargo Terangkut
 			</div>
@@ -772,109 +706,73 @@ for ($g = 0; $g <= $generasi; $g++) {
 					
 				<div class="row">
 							
-					<!-- tabel 1           -->
-					<!-- baris = pengimpor -->
-					<!-- kolom = depo      -->
+					<!-- tabel 1            -->
+					<!-- baris = distribusi -->
+					<!-- kolom = kapal      -->
 					<?php if ($jumlahDistribusi > 0) { ?>
 
-						<!-- kolom i1, i2, in -->
+						<!-- kolom d[1], d[2], d[n] -->
 						<!-- kolom pertama -->
 						<div class="col-sm-1">
-							<div class="p-2">
-								<div class="form-group row">
-									<input type="text" name="t1_A1" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+							<div class="p-1">
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row">
-									<input type="text" name="t1_A<?php echo $i+1; ?>" value="d<?php echo $i; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark text-center">d<?php echo $i; ?></div></div>
 								<?php } ?>
-								<div class="form-group row">
-									<input type="text" name="t1_A<?php echo $i+1; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
-								<div class="form-group row">
-									<input type="text" name="t1_A<?php echo $i+1; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 							</div>
 						</div>
 								
-						<!-- kolom d1, d2, dn -->
-						<!-- kolom kedua, kolom_n-1 -->
+						<!-- kolom d[1], d[2], d[n] -->
+						<!-- kolom kedua, kolom[n-2] -->
 						<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-						<?php $totalCargo[$i] = 0; ?>
+						<?php   $totalCargo[$i] = 0; ?>
 						<?php } ?>
 						<?php for ($d = 1; $d <= $jumlahKapal; $d++) { ?>
-						<?php $row = 1; ?>
+						<?php   $row = 1; ?>
 						<div class="col-sm-1">
-							<div class="p-2">
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="k<?php echo $d; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+							<div class="p-1">
+								<div class="form-group row"><div class="col bg-light text-dark text-center">k<?php echo $d; ?></div></div>
 								<?php $totalKapal = 0; ?>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo $cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>">
-									<?php $totalKapal += $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-									<?php $totalCargo[$i] += $cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]); ?></div></div>
+								<?php   $totalKapal += $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
+								<?php   $totalCargo[$i] += $cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php } ?>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo $totalKapal; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo $rJumlah[$d-1][0]?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark white text-right"><?php echo number_format($totalKapal); ?></div></div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($rJumlah[$d-1][0]); ?></div></div>
 							</div>
 						</div>
 						<?php } ?>
 								
-						<!-- kolom sebelum terakhir -->
+						<!-- kolom sebelum kolom terakhir -->
 						<div class="col-sm-1">
-							<div class="p-2">
-								<div class="form-group row">
-									<?php $row = 1; ?>
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+							<div class="p-1">
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 								<?php $gtCargo = 0;?>
 								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
 								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row">
-									<!-- <input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo number_format($demand); ?>" class="form-control form-control-user" size="10" readonly> -->
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo $totalCargo[$i]; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-									<?php $gtCargo += $totalCargo[$i]; ?>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalCargo[$i]); ?></div></div>
+								<?php   $gtCargo += $totalCargo[$i]; ?>
 								<?php } ?>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo $gtCargo; ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtCargo); ?></div></div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 							</div>
 						</div>
 
 						<!-- kolom terakhir -->
 						<div class="col-sm-1">
-							<div class="p-2">
-								<div class="form-group row">
-									<?php $row = 1; ?>
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+							<div class="p-1">
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
 								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row">
-									<!-- <input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo number_format($demand); ?>" class="form-control form-control-user" size="10" readonly> -->
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="<?php echo number_format($demand[$d-1][0]); ?>" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($demand[$d-1][0]); ?></div></div>
 								<?php } ?>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
-								<div class="form-group row">
-									<input type="text" name="t1_<?php echo chr(65+$d).$row++; ?>" value="" class="form-control form-control-user" size="<?php echo $columnSize; ?>" readonly>
-								</div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
 							</div>
 						</div>
 							
@@ -891,17 +789,20 @@ for ($g = 0; $g <= $generasi; $g++) {
 			
 	<!-- proses -->
 	<div class="col-sm-12">
-		<div class="card mb-3">
+		<div class="card">
 			<div class="card-body">
 				<div class="row">
 					<div class="col-sm-3">
-						<div class="p-2">
+						<div class="p-1">
 							<a href="c002_input1.php" class="btn btn-primary btn-icon-split">
 								<span class="icon text-white-50"><i class="fas fa-arrow-left"></i></span>
 								<span class="text">Back</span>
 							</a>
 							<a href="Report1smry.php" target="_blank" class="btn btn-primary btn-icon-split">
 								<span class="text">Grafik</span>
+							</a>
+							<a href="#" class="btn btn-primary btn-icon-split" onclick="window.print()">
+								<span class="text">Print</span>
 							</a>
 							<!-- /form -->
 							</form>
