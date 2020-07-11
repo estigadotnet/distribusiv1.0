@@ -353,9 +353,9 @@ for ($g = 0; $g <= $generasi; $g++) {
 				<!-- form -->
 				<form action="c004_input4.php" method="POST">
 				<input type="hidden" name="token" value="<?php echo CurrentPage()->Token; ?>">
-				<div class="form-group row"><div class="col-4">Jumlah Kapal</div><div class="col-4"><?php echo $jumlahKapal; ?></div></div>
-				<div class="form-group row"><div class="col-4">Jumlah Distribusi</div><div class="col-4"><?php echo $jumlahDistribusi; ?></div></div>
-				<div class="form-group row"><div class="col-4">Jumlah Permintaan</div><div class="col-4"><?php echo $jumlahPermintaan; ?></div></div>
+				<div class="row"><div class="col-4">Jumlah Kapal</div><div class="col-4"><?php echo $jumlahKapal; ?></div></div>
+				<div class="row"><div class="col-4">Jumlah Distribusi</div><div class="col-4"><?php echo $jumlahDistribusi; ?></div></div>
+				<div class="row"><div class="col-4">Jumlah Permintaan</div><div class="col-4"><?php echo $jumlahPermintaan; ?></div></div>
 			</div>
 		</div>
 	</div>

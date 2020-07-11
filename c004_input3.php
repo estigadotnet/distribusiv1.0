@@ -575,9 +575,9 @@ for ($g = 0; $g <= $generasi; $g++) {
 				<!-- form -->
 				<form action="c004_input4.php" method="POST">
 				<input type="hidden" name="token" value="<?php echo CurrentPage()->Token; ?>">
-				<div class="form-group row"><div class="col-4">Jumlah Kapal</div><div class="col-4"><?php echo $jumlahKapal; ?></div></div>
-				<div class="form-group row"><div class="col-4">Jumlah Distribusi</div><div class="col-4"><?php echo $jumlahDistribusi; ?></div></div>
-				<div class="form-group row"><div class="col-4">Jumlah Permintaan</div><div class="col-4"><?php echo $jumlahPermintaan; ?></div></div>
+				<div class="row"><div class="col-4">Jumlah Kapal</div><div class="col-4"><?php echo $jumlahKapal; ?></div></div>
+				<div class="row"><div class="col-4">Jumlah Distribusi</div><div class="col-4"><?php echo $jumlahDistribusi; ?></div></div>
+				<div class="row"><div class="col-4">Jumlah Permintaan</div><div class="col-4"><?php echo $jumlahPermintaan; ?></div></div>
 			</div>
 		</div>
 	</div>
@@ -588,12 +588,12 @@ for ($g = 0; $g <= $generasi; $g++) {
 		<div class="card">
 			<div class="card-header">Operator GA</div>
 			<div class="card-body">
-				<div class="form-group row"><div class="col-3">Stopping Criteria</div><div class="col-6"><?php echo ($stopping == 'generasi' ? "Generasi = ".$generasi : ($stopping == 'repeat' ? "Repetition Fitness Value = ".$jumlahRepeat : "Time (in minutes) = ".number_format($nilaiDurasi, 2))); ?></div></div>
-				<div class="form-group row"><div class="col-3">Generasi</div><div class="col-3"><?php echo $generasi; ?></div></div>
-				<div class="form-group row"><div class="col-3">Populasi</div><div class="col-3"><?php echo $populasi; ?></div></div>
-				<div class="form-group row"><div class="col-3">Prob. Seleksi</div><div class="col-3"><?php echo $seleksi; ?></div></div>
-				<div class="form-group row"><div class="col-3">Prob. CO</div><div class="col-3"><?php echo $co; ?></div></div>
-				<div class="form-group row"><div class="col-3">Prob. Mutasi</div><div class="col-3"><?php echo $mutasi; ?></div></div>
+				<div class="row"><div class="col-3">Stopping Criteria</div><div class="col-6"><?php echo ($stopping == 'generasi' ? "Generasi = ".$generasi : ($stopping == 'repeat' ? "Repetition Fitness Value = ".$jumlahRepeat : "Time (in minutes) = ".number_format($nilaiDurasi, 2))); ?></div></div>
+				<div class="row"><div class="col-3">Generasi</div><div class="col-3"><?php echo $generasi; ?></div></div>
+				<div class="row"><div class="col-3">Populasi</div><div class="col-3"><?php echo $populasi; ?></div></div>
+				<div class="row"><div class="col-3">Prob. Seleksi</div><div class="col-3"><?php echo $seleksi; ?></div></div>
+				<div class="row"><div class="col-3">Prob. CO</div><div class="col-3"><?php echo $co; ?></div></div>
+				<div class="row"><div class="col-3">Prob. Mutasi</div><div class="col-3"><?php echo $mutasi; ?></div></div>
 			</div>
 		</div>
 	</div>

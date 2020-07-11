@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2020/7/11" version="16.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2020/7/12" version="16.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!--
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -855,7 +855,7 @@
   </global>
   <project>
     <phrase id="bodytitle" value="Distribusi v1.0" />
-    <phrase id="footertext" value="&amp;copy;2020 Syalihbara. All rights reserved." />
+    <phrase id="footertext" value="&amp;copy;2020 Syariful Alim. All rights reserved." />
     <menu id="21">
       <phrase id="menutext" value="Grafik Brute Force" />
     </menu>
