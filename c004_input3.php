@@ -167,26 +167,13 @@ Execute($q);
 // create kromosom awal
 for ($pop = 0; $pop < intval($populasi); $pop++) {
 	for ($kap = 0; $kap < (intval($jumlahKapal) * intval($jumlahDistribusi)); $kap++) {
-		//$kProses[$pop][$kap] = number_format(rand(0, 100) / 100, 2);
 		$kProses[$pop][$kap] = number_format(rand(0, 200) / 100, 2);
-		//if ($kProses[$pop][$kap] <= 0.1) {
-		//	$kProses[$pop][$kap] = 0;
-		//}
-
-		/*$nilai = rand(1, 12) % 2;
-		if ($nilai == 1) {
-			$kProses[$pop][$kap] = 0.00;
-		}
-		else {
-			$kProses[$pop][$kap] = number_format(rand(0, 200) / 100, 2);
-		}*/
 	}
 }
 
 $durasi       = 0;
 $selisih      = 0;
 $jumlahRepeat = 0;
-$sama         = 0;
 
 // penentuan jumlah looping berdasarkan stopping criteria
 if ($stopping == 'generasi') {
@@ -315,10 +302,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 	if (_SRD_) echo "<b>Nilai Fitness</b>";
 	if (_SRD_) echo "<br>";
 	for ($i = 0; $i < $pop; $i++) {
-		//$fitness[$i] = (100000000 / ($total_tc[$i] + $total_cf[$i]));
 		$fitness[$i] = ($total_tc[$i] / _MC_);
-		//$fitness[$i] = (1000000000 / $total_tc[$i]);
-		//$fitness[$i] = $total_tc[$i];
 		$total_fitness += $fitness[$i];
 		if (_SRD_) echo $fitness[$i];
 		if (_SRD_) echo "<br>";
@@ -349,12 +333,6 @@ for ($g = 0; $g <= $generasi; $g++) {
 	for ($terendah = 0; $terendah < 3; $terendah++) {
 		// ambil index key array
 		$minimum = array_keys($fitness, min($fitness));
-		//echo "<pre>"; print_r($fitness); echo "</pre>";
-		//echo "<pre>"; print_r($minimum); echo "</pre>";
-
-		// buang array fitness dan kromosom berdasarkan index key
-		//unset($fitness[$minimum[0]]);
-		//unset($kProses[$minimum[0]]);
 
 		// replace dengan individu momentum
 		$fitness[$minimum[0]] = $fitness[$index_key[0]];
@@ -451,7 +429,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 
 	// copykan hasil replacement ke kromosom baru untuk
 	// persiapan generasi berikutnya
-	//$kProses = $kMutasi;
+	$kProses = $kMutasi;
 
 
 	// check stopping criteria "time"
@@ -466,7 +444,6 @@ for ($g = 0; $g <= $generasi; $g++) {
 		if (_SRD_) echo "generasi : ".$generasi."<br>";
 		if (_SRD_) echo "g        : ".$g."<br>";
 		if (_SRD_) echo "</pre>";
-		//die("break check");
 		if ($selisih >= $durasi) {
 			$generasi = $g; // trigger untuk exit for
 		}
@@ -477,33 +454,14 @@ for ($g = 0; $g <= $generasi; $g++) {
 	// end if ($g < $generasi) {
 
 	// replacement
-	/*if (_SRD_) echo "<b>Hasil Replacement</b>";
-	if (_SRD_) echo "<br>";
-	for ($i = 0; $i < $pop; $i++) {
-		for ($j = 0; $j < $kap; $j++) {
-			$nilai = rand(1, 240) % 2;
-			if ($nilai == 1) {
-				$kMutasi[$i][$j] = 0;
-			}
-			if (_SRD_) echo $kMutasi[$i][$j].", ";
-		}
-		if (_SRD_) echo "<br>";
-	}
-	if (_SRD_) echo "<br>";*/
 	// create array per kapal
 	for ($k = 1; $k <= $jumlahKapal; $k++) {
 		for ($d = 1; $d <= $jumlahDistribusi; $d++) {
-			$arrKapal[$k][(($jumlahKapal * $d)-$jumlahKapal)+($k-1)] = $kMutasi[$index_key[0]][(($jumlahKapal * $d)-$jumlahKapal)+($k-1)];
+			$arrKapal[$k][(($jumlahKapal * $d)-$jumlahKapal)+($k-1)] = $kProses[$index_key[0]][(($jumlahKapal * $d)-$jumlahKapal)+($k-1)];
 		}
-		//echo "<br>";
 	}
-	//echo "<pre>";
-	//print_r($arrKapal);
-	//echo "</pre>";
-
 	// check constraint per kapal
 	for ($k = 1; $k <= $jumlahKapal; $k++) {
-		//echo "array[".$k."] : ".array_sum($arrKapal[$k])."<br>";
 		$hasilSum = array_sum($arrKapal[$k]);
 		while ($hasilSum >= $rJumlah[$k-1][0]) {
 			// cari index terkecil
@@ -511,30 +469,24 @@ for ($g = 0; $g <= $generasi; $g++) {
 
 			// lakukan replacement 1 array menjadi 0
 			$arrKapal[$k][$indexKey[0]] = 0.00;
-			$kMutasi[$index_key[0]][$indexKey[0]] = 0.00;
+			$kProses[$index_key[0]][$indexKey[0]] = 0.00;
 			$cargoterangkut[$index_key[0]][$indexKey[0]] = 0.00;
 				
 			// lalu di-sum lagi
 			$hasilSum = array_sum($arrKapal[$k]);
-			//echo "array[".$k."] : ".array_sum($arrKapal[$k])." - setelah replacement<br>";
 		}
-		//echo "array[".$k."] : ".array_sum($arrKapal[$k])." - setelah replacement<br>";
 	}
-	//echo "<br>";
-	//echo "<pre>";
-	//print_r($arrKapal);
-	//echo "</pre>";
 
 	// check constraint total distribusi, harus di bawah demand
-	$sumCargo = array_sum($cargoterangkut[$index_key[0]]); //echo $sumCargo." - ".ExecuteScalar("select Nilai from t006_parameter where Nama = 'Demand'");
+	$sumCargo = array_sum($cargoterangkut[$index_key[0]]);
 	while ($sumCargo >= ExecuteScalar("select Nilai from t006_parameter where Nama = 'Demand'")) {
 		$indexKey = array_keys($cargoterangkut[$index_key[0]], max(array_filter($cargoterangkut[$index_key[0]], function($varx) {return $varx != 0;})));
-		$kMutasi[$index_key[0]][$indexKey[0]] = 0.00;
+		$kProses[$index_key[0]][$indexKey[0]] = 0.00;
 		$cargoterangkut[$index_key[0]][$indexKey[0]] = 0.00;
 		$sumCargo = array_sum($cargoterangkut[$index_key[0]]);
 	}
 
-	$kProses = $kMutasi;
+	//$kProses = $kMutasi;
 
 	// simpan ke tabel, dengan cara seleksi
 	$q = "insert into
@@ -556,27 +508,23 @@ for ($g = 0; $g <= $generasi; $g++) {
 					$total_cfAcuan = $total_cf[$index_key[0]];
 					$fitnessAcuan  = (_MP_ == 'max' ? max($fitness) : min($fitness));
 					$kromosomAcuan = serialize($kProses[$index_key[0]]);
-					$sama = 0;
 				}
 				else {
-					$sama++;
 				}
 			}
 			else {
 				if ($fitness[$index_key[0]] > $fitnessAcuan) {
-					$sama++;
 				}
 				else {
 					$total_tcAcuan = $total_tc[$index_key[0]];
 					$total_cfAcuan = $total_cf[$index_key[0]];
 					$fitnessAcuan  = (_MP_ == 'max' ? max($fitness) : min($fitness));
 					$kromosomAcuan = serialize($kProses[$index_key[0]]);
-					$sama = 0;
 				}
 			}
 		}
 	$q = $q . $total_tcAcuan.", ".$total_cfAcuan.", ".$fitnessAcuan.", '".$kromosomAcuan."', ".$g.")";
-	Execute($q); //echo $q; //die();
+	Execute($q);
 
 	if ($simpanPertama == 1) {
 		$simpanPertama = 2;
@@ -603,9 +551,8 @@ for ($g = 0; $g <= $generasi; $g++) {
 		if (_SRD_) echo "generasi      : ".$generasi."<br>";
 		if (_SRD_) echo "g             : ".$g."<br>";
 		if (_SRD_) echo "</pre>";
-		//die("break check");
 		if ($simpanSama >= $jumlahRepeat) {
-			//$generasi = $g; // trigger untuk exit for
+			$generasi = $g; // trigger untuk exit for
 			break;
 		}
 	}
