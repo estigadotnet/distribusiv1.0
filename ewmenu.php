@@ -23,6 +23,7 @@ $topMenu->addMenuItem(8, "mi_t006_parameter", $MenuLanguage->MenuPhrase("8", "Me
 $topMenu->addMenuItem(9, "mi_t007_operator", $MenuLanguage->MenuPhrase("9", "MenuText"), $MenuRelativePath . "t007_operatorlist.php", 4, "", TRUE, FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(10, "mi_c002_input1", $MenuLanguage->MenuPhrase("10", "MenuText"), $MenuRelativePath . "c002_input1.php", -1, "", TRUE, FALSE, FALSE, "", "", TRUE);
 $topMenu->addMenuItem(18, "mi_c005_bf1", $MenuLanguage->MenuPhrase("18", "MenuText"), $MenuRelativePath . "c005_bf1.php", -1, "", TRUE, FALSE, FALSE, "", "", TRUE);
+$topMenu->addMenuItem(23, "mi_c997_trialscript2", $MenuLanguage->MenuPhrase("23", "MenuText"), $MenuRelativePath . "c997_trialscript2.php", -1, "", TRUE, FALSE, FALSE, "", "", TRUE);
 echo $topMenu->toScript();
 
 // Sidebar menu
@@ -37,5 +38,6 @@ $sideMenu->addMenuItem(8, "mi_t006_parameter", $MenuLanguage->MenuPhrase("8", "M
 $sideMenu->addMenuItem(9, "mi_t007_operator", $MenuLanguage->MenuPhrase("9", "MenuText"), $MenuRelativePath . "t007_operatorlist.php", 4, "", TRUE, FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(10, "mi_c002_input1", $MenuLanguage->MenuPhrase("10", "MenuText"), $MenuRelativePath . "c002_input1.php", -1, "", TRUE, FALSE, FALSE, "", "", TRUE);
 $sideMenu->addMenuItem(18, "mi_c005_bf1", $MenuLanguage->MenuPhrase("18", "MenuText"), $MenuRelativePath . "c005_bf1.php", -1, "", TRUE, FALSE, FALSE, "", "", TRUE);
+$sideMenu->addMenuItem(23, "mi_c997_trialscript2", $MenuLanguage->MenuPhrase("23", "MenuText"), $MenuRelativePath . "c997_trialscript2.php", -1, "", TRUE, FALSE, FALSE, "", "", TRUE);
 echo $sideMenu->toScript();
 ?>

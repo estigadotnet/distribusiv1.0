@@ -25,7 +25,6 @@ class Report1 extends ReportTable
 
 	// Export
 	public $ExportDoc;
-	public $Chart1;
 
 	// Fields
 	public $id;
@@ -114,33 +113,6 @@ class Report1 extends ReportTable
 		$this->Fitness->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
 		$this->Fitness->SourceTableVar = 't101_result';
 		$this->fields['Fitness'] = &$this->Fitness;
-
-		// Chart1
-		$this->Chart1 = new DbChart($this, 'Chart1', 'Chart1', 'Generasi', 'TotalCost', 1002, '', 0, 'SUM', 1800, 500);
-		$this->Chart1->SortType = 0;
-		$this->Chart1->SortSequence = "";
-		$this->Chart1->SqlSelect = "SELECT `Generasi`, '', SUM(`TotalCost`) FROM ";
-		$this->Chart1->SqlGroupBy = "`Generasi`";
-		$this->Chart1->SqlOrderBy = "";
-		$this->Chart1->SeriesDateType = "";
-		$this->Chart1->ID = "Report1_Chart1"; // Chart ID
-		$this->Chart1->setParameters([
-			["type", "1002"],
-			["seriestype", "0"]
-		]); // Chart type / Chart series type
-		$this->Chart1->setParameters([
-			["caption", $this->Chart1->caption()],
-			["xaxisname", $this->Chart1->xAxisName()]
-		]); // Chart caption / X axis name
-		$this->Chart1->setParameter("yaxisname", $this->Chart1->yAxisName()); // Y axis name
-		$this->Chart1->setParameters([
-			["shownames", "1"],
-			["showvalues", "1"],
-			["showhovercap", "1"]
-		]); // Show names / Show values / Show hover
-		$this->Chart1->setParameter("alpha", "50"); // Chart alpha
-		$this->Chart1->setParameter("colorpalette", "#5899DA,#E8743B,#19A979,#ED4A7B,#945ECF,#13A4B4,#525DF4,#BF399E,#6C8893,#EE6868,#2F6497"); // Chart color palette
-		$this->Chart1->setParameters([["options.legend.display",false],["options.legend.fullWidth",false],["options.legend.reverse",false],["options.legend.labels.usePointStyle",false],["options.title.display",false],["options.tooltips.enabled",false],["options.tooltips.intersect",false],["options.tooltips.displayColors",false],["options.plugins.filler.propagate",false],["options.animation.animateRotate",false],["options.animation.animateScale",false],["dataset.lineTension",0.3],["dataset.showLine",true],["dataset.spanGaps",false],["dataset.steppedLine",false],["scale.gridLines.offsetGridLines",false]]);
 	}
 
 	// Field Visibility

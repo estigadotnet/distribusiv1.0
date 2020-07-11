@@ -532,7 +532,7 @@ class Report1_summary extends Report1
 	}
 
 	// Initialize common variables
-	public $HideOptions = FALSE;
+	public $HideOptions = TRUE;
 	public $ExportOptions; // Export options
 	public $SearchOptions; // Search options
 	public $FilterOptions; // Filter options

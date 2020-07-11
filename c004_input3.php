@@ -786,7 +786,28 @@ for ($g = 0; $g <= $generasi; $g++) {
 	<!-- end of total ke kanan -->
 			
 	<?php }?>
-			
+
+</div>
+
+<div class="row">
+	<div class="col-sm-12">
+		<div class="card">
+			<div class="card-body">
+				<div class="row">
+					<div class="col-sm-12">
+					<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+					<div id="chart_div"></div>
+					<!-- <div id="curve_chart" style="width: 900px; height: 500px"></div> -->
+					<!-- <div id="curve_chart"></div> -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+
 	<!-- proses -->
 	<div class="col-sm-12">
 		<div class="card">
@@ -798,9 +819,9 @@ for ($g = 0; $g <= $generasi; $g++) {
 								<span class="icon text-white-50"><i class="fas fa-arrow-left"></i></span>
 								<span class="text">Back</span>
 							</a>
-							<a href="Report1smry.php" target="_blank" class="btn btn-primary btn-icon-split">
+							<!--<a href="Report1smry.php" target="_blank" class="btn btn-primary btn-icon-split">
 								<span class="text">Grafik</span>
-							</a>
+							</a>-->
 							<a href="#" class="btn btn-primary btn-icon-split" onclick="window.print()">
 								<span class="text">Print</span>
 							</a>
@@ -816,6 +837,49 @@ for ($g = 0; $g <= $generasi; $g++) {
 
 </div>
 <!-- ./row -->
+
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+	<script type="text/javascript">
+google.charts.load('current', {
+  packages: ['corechart']
+});
+google.charts.setOnLoadCallback(drawBasic);
+
+function drawBasic() {
+
+  var data = google.visualization.arrayToDataTable([
+
+ ['Generasi','Total Cost'],
+
+  <?php
+  $q = "select Generasi, TotalCost from t101_result";
+  $r = ExecuteRows($q);
+  foreach ($r as $rs) {
+  	echo "[".$rs["Generasi"].", ".$rs["TotalCost"]."],";
+  }
+  ?>
+  ]);
+
+  var options = {
+	hAxis: {
+	  title: 'Generasi'
+	},
+	vAxis: {
+	  title: 'Total Cost'
+	},
+	width: '100%',
+	height: '500',
+	curveType: 'function',
+	title: 'Grafik GA'
+  };
+
+  var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+  chart.draw(data, options);
+}
+
+	</script>
+
 
 <?php if (Config("DEBUG")) echo GetDebugMessage(); ?>
 <?php include_once "footer.php"; ?>
