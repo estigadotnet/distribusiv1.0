@@ -565,6 +565,13 @@ for ($g = 0; $g <= $generasi; $g++) {
 
 <!-- row -->
 <div class="row">
+	<div class="col">
+		<div class="card">
+			<div class="card-header">GA</div>
+		</div>
+	</div>
+</div>
+<div class="row">
 
 	<!-- Parameter Distribusi -->
 	<div class="col-sm-4">
