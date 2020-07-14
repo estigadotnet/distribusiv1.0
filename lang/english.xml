@@ -1012,6 +1012,13 @@
       <field id="nama">
         <phrase id="fldcaption" value="Nama" />
       </field>
+      <field id="diproses">
+        <phrase id="fldcaption" value="Diproses" />
+        <phrase id="fldtagvalue1" value="1" />
+        <phrase id="fldtagcaption1" value="Yes" />
+        <phrase id="fldtagvalue2" value="0" />
+        <phrase id="fldtagcaption2" value="No" />
+      </field>
     </table>
     <table id="t002_kapaldetail">
       <phrase id="tblcaption" value="Detail" />

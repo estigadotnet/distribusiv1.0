@@ -47,7 +47,7 @@ Page_Rendering();
 							<input type="hidden" name="token" value="<?php echo CurrentPage()->Token; ?>">
 							<div class="form-group row">
 								Jumlah Kapal
-								<input type="text" name="jumlahKapal" class="form-control form-control-user" id="jumlahKapal" placeholder="" value="<?php echo ExecuteScalar('select count(id) from t001_kapal'); ?>" readonly>
+								<input type="text" name="jumlahKapal" class="form-control form-control-user" id="jumlahKapal" placeholder="" value="<?php echo ExecuteScalar('select count(id) from t001_kapal where Diproses = 1'); ?>" readonly>
 							</div>
 							<div class="form-group row">
 								Jumlah Distribusi

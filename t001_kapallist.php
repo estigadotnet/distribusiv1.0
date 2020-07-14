@@ -65,6 +65,11 @@ loadjs.ready("head", function() {
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_kapal_list->Nama->caption(), $t001_kapal_list->Nama->RequiredErrorMessage)) ?>");
 			<?php } ?>
+			<?php if ($t001_kapal_list->Diproses->Required) { ?>
+				elm = this.getElements("x" + infix + "_Diproses[]");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_kapal_list->Diproses->caption(), $t001_kapal_list->Diproses->RequiredErrorMessage)) ?>");
+			<?php } ?>
 
 				// Call Form_CustomValidate event
 				if (!this.Form_CustomValidate(fobj))
@@ -82,6 +87,7 @@ loadjs.ready("head", function() {
 	ft001_kapallist.emptyRow = function(infix) {
 		var fobj = this._form;
 		if (ew.valueChanged(fobj, infix, "Nama", false)) return false;
+		if (ew.valueChanged(fobj, infix, "Diproses[]", true)) return false;
 		return true;
 	}
 
@@ -96,6 +102,8 @@ loadjs.ready("head", function() {
 	ft001_kapallist.validateRequired = <?php echo Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
 	// Dynamic selection lists
+	ft001_kapallist.lists["x_Diproses[]"] = <?php echo $t001_kapal_list->Diproses->Lookup->toClientList($t001_kapal_list) ?>;
+	ft001_kapallist.lists["x_Diproses[]"].options = <?php echo JsonEncode($t001_kapal_list->Diproses->options(FALSE, TRUE)) ?>;
 	loadjs.done("ft001_kapallist");
 });
 var ft001_kapallistsrch;
@@ -199,6 +207,15 @@ $t001_kapal_list->ListOptions->render("header", "left");
 	<?php } else { ?>
 		<th data-name="Nama" class="<?php echo $t001_kapal_list->Nama->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_kapal_list->SortUrl($t001_kapal_list->Nama) ?>', 1);"><div id="elh_t001_kapal_Nama" class="t001_kapal_Nama">
 			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_kapal_list->Nama->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_kapal_list->Nama->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_kapal_list->Nama->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t001_kapal_list->Diproses->Visible) { // Diproses ?>
+	<?php if ($t001_kapal_list->SortUrl($t001_kapal_list->Diproses) == "") { ?>
+		<th data-name="Diproses" class="<?php echo $t001_kapal_list->Diproses->headerCellClass() ?>"><div id="elh_t001_kapal_Diproses" class="t001_kapal_Diproses"><div class="ew-table-header-caption"><?php echo $t001_kapal_list->Diproses->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="Diproses" class="<?php echo $t001_kapal_list->Diproses->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_kapal_list->SortUrl($t001_kapal_list->Diproses) ?>', 1);"><div id="elh_t001_kapal_Diproses" class="t001_kapal_Diproses">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_kapal_list->Diproses->caption() ?></span><span class="ew-table-header-sort"><?php if ($t001_kapal_list->Diproses->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_kapal_list->Diproses->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -337,6 +354,38 @@ $t001_kapal_list->ListOptions->render("body", "left", $t001_kapal_list->RowCount
 <?php if ($t001_kapal->RowType == ROWTYPE_EDIT || $t001_kapal->CurrentMode == "edit") { ?>
 <input type="hidden" data-table="t001_kapal" data-field="x_id" name="x<?php echo $t001_kapal_list->RowIndex ?>_id" id="x<?php echo $t001_kapal_list->RowIndex ?>_id" value="<?php echo HtmlEncode($t001_kapal_list->id->CurrentValue) ?>">
 <?php } ?>
+	<?php if ($t001_kapal_list->Diproses->Visible) { // Diproses ?>
+		<td data-name="Diproses" <?php echo $t001_kapal_list->Diproses->cellAttributes() ?>>
+<?php if ($t001_kapal->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t001_kapal_list->RowCount ?>_t001_kapal_Diproses" class="form-group">
+<?php
+$selwrk = ConvertToBool($t001_kapal_list->Diproses->CurrentValue) ? " checked" : "";
+?>
+<div class="custom-control custom-checkbox d-inline-block">
+	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_664987" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_list->Diproses->editAttributes() ?>>
+	<label class="custom-control-label" for="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_664987"></label>
+</div>
+</span>
+<input type="hidden" data-table="t001_kapal" data-field="x_Diproses" name="o<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="o<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" value="<?php echo HtmlEncode($t001_kapal_list->Diproses->OldValue) ?>">
+<?php } ?>
+<?php if ($t001_kapal->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t001_kapal_list->RowCount ?>_t001_kapal_Diproses" class="form-group">
+<?php
+$selwrk = ConvertToBool($t001_kapal_list->Diproses->CurrentValue) ? " checked" : "";
+?>
+<div class="custom-control custom-checkbox d-inline-block">
+	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_509817" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_list->Diproses->editAttributes() ?>>
+	<label class="custom-control-label" for="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_509817"></label>
+</div>
+</span>
+<?php } ?>
+<?php if ($t001_kapal->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t001_kapal_list->RowCount ?>_t001_kapal_Diproses">
+<span<?php echo $t001_kapal_list->Diproses->viewAttributes() ?>><div class="custom-control custom-checkbox d-inline-block"><input type="checkbox" id="x_Diproses" class="custom-control-input" value="<?php echo $t001_kapal_list->Diproses->getViewValue() ?>" disabled<?php if (ConvertToBool($t001_kapal_list->Diproses->CurrentValue)) { ?> checked<?php } ?>><label class="custom-control-label" for="x_Diproses"></label></div></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
 <?php
 
 // Render list options (body, right)
@@ -388,6 +437,20 @@ $t001_kapal_list->ListOptions->render("body", "left", $t001_kapal_list->RowIndex
 <input type="text" data-table="t001_kapal" data-field="x_Nama" name="x<?php echo $t001_kapal_list->RowIndex ?>_Nama" id="x<?php echo $t001_kapal_list->RowIndex ?>_Nama" size="30" maxlength="50" placeholder="<?php echo HtmlEncode($t001_kapal_list->Nama->getPlaceHolder()) ?>" value="<?php echo $t001_kapal_list->Nama->EditValue ?>"<?php echo $t001_kapal_list->Nama->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_kapal" data-field="x_Nama" name="o<?php echo $t001_kapal_list->RowIndex ?>_Nama" id="o<?php echo $t001_kapal_list->RowIndex ?>_Nama" value="<?php echo HtmlEncode($t001_kapal_list->Nama->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($t001_kapal_list->Diproses->Visible) { // Diproses ?>
+		<td data-name="Diproses">
+<span id="el$rowindex$_t001_kapal_Diproses" class="form-group t001_kapal_Diproses">
+<?php
+$selwrk = ConvertToBool($t001_kapal_list->Diproses->CurrentValue) ? " checked" : "";
+?>
+<div class="custom-control custom-checkbox d-inline-block">
+	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_337936" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_list->Diproses->editAttributes() ?>>
+	<label class="custom-control-label" for="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_337936"></label>
+</div>
+</span>
+<input type="hidden" data-table="t001_kapal" data-field="x_Diproses" name="o<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="o<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" value="<?php echo HtmlEncode($t001_kapal_list->Diproses->OldValue) ?>">
 </td>
 	<?php } ?>
 <?php

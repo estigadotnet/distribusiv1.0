@@ -642,6 +642,7 @@ class t001_kapal_add extends t001_kapal
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->id->Visible = FALSE;
 		$this->Nama->setVisibility();
+		$this->Diproses->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -789,6 +790,8 @@ class t001_kapal_add extends t001_kapal
 		$this->id->OldValue = $this->id->CurrentValue;
 		$this->Nama->CurrentValue = NULL;
 		$this->Nama->OldValue = $this->Nama->CurrentValue;
+		$this->Diproses->CurrentValue = NULL;
+		$this->Diproses->OldValue = $this->Diproses->CurrentValue;
 	}
 
 	// Load form values
@@ -807,6 +810,15 @@ class t001_kapal_add extends t001_kapal
 				$this->Nama->setFormValue($val);
 		}
 
+		// Check field name 'Diproses' first before field var 'x_Diproses'
+		$val = $CurrentForm->hasValue("Diproses") ? $CurrentForm->getValue("Diproses") : $CurrentForm->getValue("x_Diproses");
+		if (!$this->Diproses->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->Diproses->Visible = FALSE; // Disable update for API request
+			else
+				$this->Diproses->setFormValue($val);
+		}
+
 		// Check field name 'id' first before field var 'x_id'
 		$val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
 	}
@@ -816,6 +828,7 @@ class t001_kapal_add extends t001_kapal
 	{
 		global $CurrentForm;
 		$this->Nama->CurrentValue = $this->Nama->FormValue;
+		$this->Diproses->CurrentValue = $this->Diproses->FormValue;
 	}
 
 	// Load row based on key values
@@ -855,6 +868,7 @@ class t001_kapal_add extends t001_kapal
 			return;
 		$this->id->setDbValue($row['id']);
 		$this->Nama->setDbValue($row['Nama']);
+		$this->Diproses->setDbValue($row['Diproses']);
 	}
 
 	// Return a row with default values
@@ -864,6 +878,7 @@ class t001_kapal_add extends t001_kapal
 		$row = [];
 		$row['id'] = $this->id->CurrentValue;
 		$row['Nama'] = $this->Nama->CurrentValue;
+		$row['Diproses'] = $this->Diproses->CurrentValue;
 		return $row;
 	}
 
@@ -903,6 +918,7 @@ class t001_kapal_add extends t001_kapal
 		// Common render codes for all row types
 		// id
 		// Nama
+		// Diproses
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -914,10 +930,23 @@ class t001_kapal_add extends t001_kapal
 			$this->Nama->ViewValue = $this->Nama->CurrentValue;
 			$this->Nama->ViewCustomAttributes = "";
 
+			// Diproses
+			if (ConvertToBool($this->Diproses->CurrentValue)) {
+				$this->Diproses->ViewValue = $this->Diproses->tagCaption(1) != "" ? $this->Diproses->tagCaption(1) : "Yes";
+			} else {
+				$this->Diproses->ViewValue = $this->Diproses->tagCaption(2) != "" ? $this->Diproses->tagCaption(2) : "No";
+			}
+			$this->Diproses->ViewCustomAttributes = "";
+
 			// Nama
 			$this->Nama->LinkCustomAttributes = "";
 			$this->Nama->HrefValue = "";
 			$this->Nama->TooltipValue = "";
+
+			// Diproses
+			$this->Diproses->LinkCustomAttributes = "";
+			$this->Diproses->HrefValue = "";
+			$this->Diproses->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// Nama
@@ -928,11 +957,19 @@ class t001_kapal_add extends t001_kapal
 			$this->Nama->EditValue = HtmlEncode($this->Nama->CurrentValue);
 			$this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
 
+			// Diproses
+			$this->Diproses->EditCustomAttributes = "";
+			$this->Diproses->EditValue = $this->Diproses->options(FALSE);
+
 			// Add refer script
 			// Nama
 
 			$this->Nama->LinkCustomAttributes = "";
 			$this->Nama->HrefValue = "";
+
+			// Diproses
+			$this->Diproses->LinkCustomAttributes = "";
+			$this->Diproses->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -956,6 +993,11 @@ class t001_kapal_add extends t001_kapal
 		if ($this->Nama->Required) {
 			if (!$this->Nama->IsDetailKey && $this->Nama->FormValue != NULL && $this->Nama->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->Nama->caption(), $this->Nama->RequiredErrorMessage));
+			}
+		}
+		if ($this->Diproses->Required) {
+			if ($this->Diproses->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->Diproses->caption(), $this->Diproses->RequiredErrorMessage));
 			}
 		}
 
@@ -997,6 +1039,12 @@ class t001_kapal_add extends t001_kapal
 
 		// Nama
 		$this->Nama->setDbValueDef($rsnew, $this->Nama->CurrentValue, "", FALSE);
+
+		// Diproses
+		$tmpBool = $this->Diproses->CurrentValue;
+		if ($tmpBool != "1" && $tmpBool != "0")
+			$tmpBool = !empty($tmpBool) ? "1" : "0";
+		$this->Diproses->setDbValueDef($rsnew, $tmpBool, 0, FALSE);
 
 		// Call Row Inserting event
 		$rs = ($rsold) ? $rsold->fields : NULL;
@@ -1120,6 +1168,8 @@ class t001_kapal_add extends t001_kapal
 
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
+				case "x_Diproses":
+					break;
 				default:
 					$lookupFilter = "";
 					break;

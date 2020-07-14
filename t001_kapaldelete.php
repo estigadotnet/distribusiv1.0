@@ -72,6 +72,9 @@ $t001_kapal_delete->showMessage();
 <?php if ($t001_kapal_delete->Nama->Visible) { // Nama ?>
 		<th class="<?php echo $t001_kapal_delete->Nama->headerCellClass() ?>"><span id="elh_t001_kapal_Nama" class="t001_kapal_Nama"><?php echo $t001_kapal_delete->Nama->caption() ?></span></th>
 <?php } ?>
+<?php if ($t001_kapal_delete->Diproses->Visible) { // Diproses ?>
+		<th class="<?php echo $t001_kapal_delete->Diproses->headerCellClass() ?>"><span id="elh_t001_kapal_Diproses" class="t001_kapal_Diproses"><?php echo $t001_kapal_delete->Diproses->caption() ?></span></th>
+<?php } ?>
 	</tr>
 	</thead>
 	<tbody>
@@ -97,6 +100,13 @@ while (!$t001_kapal_delete->Recordset->EOF) {
 		<td <?php echo $t001_kapal_delete->Nama->cellAttributes() ?>>
 <span id="el<?php echo $t001_kapal_delete->RowCount ?>_t001_kapal_Nama" class="t001_kapal_Nama">
 <span<?php echo $t001_kapal_delete->Nama->viewAttributes() ?>><?php echo $t001_kapal_delete->Nama->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($t001_kapal_delete->Diproses->Visible) { // Diproses ?>
+		<td <?php echo $t001_kapal_delete->Diproses->cellAttributes() ?>>
+<span id="el<?php echo $t001_kapal_delete->RowCount ?>_t001_kapal_Diproses" class="t001_kapal_Diproses">
+<span<?php echo $t001_kapal_delete->Diproses->viewAttributes() ?>><div class="custom-control custom-checkbox d-inline-block"><input type="checkbox" id="x_Diproses" class="custom-control-input" value="<?php echo $t001_kapal_delete->Diproses->getViewValue() ?>" disabled<?php if (ConvertToBool($t001_kapal_delete->Diproses->CurrentValue)) { ?> checked<?php } ?>><label class="custom-control-label" for="x_Diproses"></label></div></span>
 </span>
 </td>
 <?php } ?>

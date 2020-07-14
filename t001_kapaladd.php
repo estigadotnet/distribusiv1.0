@@ -60,6 +60,11 @@ loadjs.ready("head", function() {
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_kapal_add->Nama->caption(), $t001_kapal_add->Nama->RequiredErrorMessage)) ?>");
 			<?php } ?>
+			<?php if ($t001_kapal_add->Diproses->Required) { ?>
+				elm = this.getElements("x" + infix + "_Diproses[]");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_kapal_add->Diproses->caption(), $t001_kapal_add->Diproses->RequiredErrorMessage)) ?>");
+			<?php } ?>
 
 				// Call Form_CustomValidate event
 				if (!this.Form_CustomValidate(fobj))
@@ -88,6 +93,8 @@ loadjs.ready("head", function() {
 	ft001_kapaladd.validateRequired = <?php echo Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
 	// Dynamic selection lists
+	ft001_kapaladd.lists["x_Diproses[]"] = <?php echo $t001_kapal_add->Diproses->Lookup->toClientList($t001_kapal_add) ?>;
+	ft001_kapaladd.lists["x_Diproses[]"].options = <?php echo JsonEncode($t001_kapal_add->Diproses->options(FALSE, TRUE)) ?>;
 	loadjs.done("ft001_kapaladd");
 });
 </script>
@@ -119,6 +126,22 @@ $t001_kapal_add->showMessage();
 <input type="text" data-table="t001_kapal" data-field="x_Nama" name="x_Nama" id="x_Nama" size="30" maxlength="50" placeholder="<?php echo HtmlEncode($t001_kapal_add->Nama->getPlaceHolder()) ?>" value="<?php echo $t001_kapal_add->Nama->EditValue ?>"<?php echo $t001_kapal_add->Nama->editAttributes() ?>>
 </span>
 <?php echo $t001_kapal_add->Nama->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t001_kapal_add->Diproses->Visible) { // Diproses ?>
+	<div id="r_Diproses" class="form-group row">
+		<label id="elh_t001_kapal_Diproses" class="<?php echo $t001_kapal_add->LeftColumnClass ?>"><?php echo $t001_kapal_add->Diproses->caption() ?><?php echo $t001_kapal_add->Diproses->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $t001_kapal_add->RightColumnClass ?>"><div <?php echo $t001_kapal_add->Diproses->cellAttributes() ?>>
+<span id="el_t001_kapal_Diproses">
+<?php
+$selwrk = ConvertToBool($t001_kapal_add->Diproses->CurrentValue) ? " checked" : "";
+?>
+<div class="custom-control custom-checkbox d-inline-block">
+	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x_Diproses[]" id="x_Diproses[]_709644" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_add->Diproses->editAttributes() ?>>
+	<label class="custom-control-label" for="x_Diproses[]_709644"></label>
+</div>
+</span>
+<?php echo $t001_kapal_add->Diproses->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div><!-- /page* -->

@@ -681,11 +681,12 @@ for ($g = 0; $g <= $generasi; $g++) {
 						<?php   $totalTc[$i] = 0; ?>
 						<?php   $totalCargo[$i] = 0; ?>
 						<?php } ?>
+						<?php $namaKapal = ExecuteRows("SELECT kapal_nama FROM v102_result group by kapal_nama"); ?>
 						<?php for ($d = 1; $d <= $jumlahKapal; $d++) { ?>
 						<?php   $row = 1; ?>
 						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">k<?php echo $d; ?></div></div>
+							<div class="p-1">							
+								<div class="form-group row"><div class="col bg-light text-dark text-center"><?php echo $namaKapal[$d-1][0]; ?></div></div>
 								<?php $totalKapal = 0; ?>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
 								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)], 2); ?></div></div>
@@ -794,7 +795,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 						<?php   $row = 1; ?>
 						<div class="col-sm-1">
 							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">k<?php echo $d; ?></div></div>
+								<div class="form-group row"><div class="col bg-light text-dark text-center"><?php echo $namaKapal[$d-1][0]; ?></div></div>
 								<?php $totalKapal = 0; ?>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
 								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]); ?></div></div>
@@ -902,7 +903,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 						<?php   $row = 1; ?>
 						<div class="col-sm-1">
 							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">k<?php echo $d; ?></div></div>
+								<div class="form-group row"><div class="col bg-light text-dark text-center"><?php echo $namaKapal[$d-1][0]; ?></div></div>
 								<?php $totalKapal = 0; ?>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
 								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]); ?></div></div>

@@ -547,6 +547,7 @@ class t001_kapal_delete extends t001_kapal
 		$this->CurrentAction = Param("action"); // Set up current action
 		$this->id->Visible = FALSE;
 		$this->Nama->setVisibility();
+		$this->Diproses->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -687,6 +688,7 @@ class t001_kapal_delete extends t001_kapal
 			return;
 		$this->id->setDbValue($row['id']);
 		$this->Nama->setDbValue($row['Nama']);
+		$this->Diproses->setDbValue($row['Diproses']);
 	}
 
 	// Return a row with default values
@@ -695,6 +697,7 @@ class t001_kapal_delete extends t001_kapal
 		$row = [];
 		$row['id'] = NULL;
 		$row['Nama'] = NULL;
+		$row['Diproses'] = NULL;
 		return $row;
 	}
 
@@ -711,6 +714,7 @@ class t001_kapal_delete extends t001_kapal
 		// Common render codes for all row types
 		// id
 		// Nama
+		// Diproses
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -722,10 +726,23 @@ class t001_kapal_delete extends t001_kapal
 			$this->Nama->ViewValue = $this->Nama->CurrentValue;
 			$this->Nama->ViewCustomAttributes = "";
 
+			// Diproses
+			if (ConvertToBool($this->Diproses->CurrentValue)) {
+				$this->Diproses->ViewValue = $this->Diproses->tagCaption(1) != "" ? $this->Diproses->tagCaption(1) : "Yes";
+			} else {
+				$this->Diproses->ViewValue = $this->Diproses->tagCaption(2) != "" ? $this->Diproses->tagCaption(2) : "No";
+			}
+			$this->Diproses->ViewCustomAttributes = "";
+
 			// Nama
 			$this->Nama->LinkCustomAttributes = "";
 			$this->Nama->HrefValue = "";
 			$this->Nama->TooltipValue = "";
+
+			// Diproses
+			$this->Diproses->LinkCustomAttributes = "";
+			$this->Diproses->HrefValue = "";
+			$this->Diproses->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -844,6 +861,8 @@ class t001_kapal_delete extends t001_kapal
 
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
+				case "x_Diproses":
+					break;
 				default:
 					$lookupFilter = "";
 					break;

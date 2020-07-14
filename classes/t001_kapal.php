@@ -27,6 +27,7 @@ class t001_kapal extends DbTable
 	// Fields
 	public $id;
 	public $Nama;
+	public $Diproses;
 
 	// Constructor
 	public function __construct()
@@ -76,6 +77,16 @@ class t001_kapal extends DbTable
 		$this->Nama->Required = TRUE; // Required field
 		$this->Nama->Sortable = TRUE; // Allow sort
 		$this->fields['Nama'] = &$this->Nama;
+
+		// Diproses
+		$this->Diproses = new DbField('t001_kapal', 't001_kapal', 'x_Diproses', 'Diproses', '`Diproses`', '`Diproses`', 16, 1, -1, FALSE, '`Diproses`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'CHECKBOX');
+		$this->Diproses->Nullable = FALSE; // NOT NULL field
+		$this->Diproses->Sortable = TRUE; // Allow sort
+		$this->Diproses->DataType = DATATYPE_BOOLEAN;
+		$this->Diproses->Lookup = new Lookup('Diproses', 't001_kapal', FALSE, '', ["","","",""], [], [], [], [], [], [], '', '');
+		$this->Diproses->OptionCount = 2;
+		$this->Diproses->DefaultErrorMessage = $Language->phrase("IncorrectField");
+		$this->fields['Diproses'] = &$this->Diproses;
 	}
 
 	// Field Visibility
@@ -458,6 +469,7 @@ class t001_kapal extends DbTable
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
 		$this->Nama->DbValue = $row['Nama'];
+		$this->Diproses->DbValue = $row['Diproses'];
 	}
 
 	// Delete uploaded files
@@ -696,6 +708,7 @@ class t001_kapal extends DbTable
 	{
 		$this->id->setDbValue($rs->fields('id'));
 		$this->Nama->setDbValue($rs->fields('Nama'));
+		$this->Diproses->setDbValue($rs->fields('Diproses'));
 	}
 
 	// Render list row values
@@ -709,6 +722,7 @@ class t001_kapal extends DbTable
 		// Common render codes
 		// id
 		// Nama
+		// Diproses
 		// id
 
 		$this->id->ViewValue = $this->id->CurrentValue;
@@ -717,6 +731,14 @@ class t001_kapal extends DbTable
 		// Nama
 		$this->Nama->ViewValue = $this->Nama->CurrentValue;
 		$this->Nama->ViewCustomAttributes = "";
+
+		// Diproses
+		if (ConvertToBool($this->Diproses->CurrentValue)) {
+			$this->Diproses->ViewValue = $this->Diproses->tagCaption(1) != "" ? $this->Diproses->tagCaption(1) : "Yes";
+		} else {
+			$this->Diproses->ViewValue = $this->Diproses->tagCaption(2) != "" ? $this->Diproses->tagCaption(2) : "No";
+		}
+		$this->Diproses->ViewCustomAttributes = "";
 
 		// id
 		$this->id->LinkCustomAttributes = "";
@@ -727,6 +749,11 @@ class t001_kapal extends DbTable
 		$this->Nama->LinkCustomAttributes = "";
 		$this->Nama->HrefValue = "";
 		$this->Nama->TooltipValue = "";
+
+		// Diproses
+		$this->Diproses->LinkCustomAttributes = "";
+		$this->Diproses->HrefValue = "";
+		$this->Diproses->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -756,6 +783,10 @@ class t001_kapal extends DbTable
 			$this->Nama->CurrentValue = HtmlDecode($this->Nama->CurrentValue);
 		$this->Nama->EditValue = $this->Nama->CurrentValue;
 		$this->Nama->PlaceHolder = RemoveHtml($this->Nama->caption());
+
+		// Diproses
+		$this->Diproses->EditCustomAttributes = "";
+		$this->Diproses->EditValue = $this->Diproses->options(FALSE);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -787,9 +818,11 @@ class t001_kapal extends DbTable
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
 					$doc->exportCaption($this->Nama);
+					$doc->exportCaption($this->Diproses);
 				} else {
 					$doc->exportCaption($this->id);
 					$doc->exportCaption($this->Nama);
+					$doc->exportCaption($this->Diproses);
 				}
 				$doc->endExportRow();
 			}
@@ -822,9 +855,11 @@ class t001_kapal extends DbTable
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
 						$doc->exportField($this->Nama);
+						$doc->exportField($this->Diproses);
 					} else {
 						$doc->exportField($this->id);
 						$doc->exportField($this->Nama);
+						$doc->exportField($this->Diproses);
 					}
 					$doc->endExportRow($rowCnt);
 				}
