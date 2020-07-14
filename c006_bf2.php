@@ -361,7 +361,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 <div class="row">
 	<div class="col">
 		<div class="card">
-			<div class="card-header">Brute Force</div>
+			<div class="card-header"><strong>Brute Force</strong></div>
 		</div>
 	</div>
 </div>
@@ -371,7 +371,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 	<div class="col-sm-4">
 		<!-- Loading -->
 		<div class="card">
-			<div class="card-header">Parameter Distribusi</div>
+			<div class="card-header"><strong>Parameter Distribusi</strong></div>
 			<div class="card-body">
 				<!-- form -->
 				<form action="c004_input4.php" method="POST">
@@ -387,331 +387,239 @@ for ($g = 0; $g <= $generasi; $g++) {
 </div>
 <?php if ($jumlahKapal > 0 or $jumlahDistribusi > 0) { ?>
 
+
+<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
+
+<!-- individu optimum -->
 <div class="row">
-	<!-- individu optimum -->
-	<div class="col-sm-12">
-		<div class="card">
-			<div class="card-header">
-				Individu Optimum
-			</div>
-			<div class="card-body">
-					
-				<div class="row">
-							
-					<!-- tabel 1            -->
-					<!-- baris = distribusi -->
-					<!-- kolom = kapal      -->
-					<?php if ($jumlahDistribusi > 0) { ?>
+  <div class="col-sm-12">
+	<div class="card">
+	  <div class="card-header"><strong>Individu Optimum</strong></div>
+	  <div class="card-body">
+		<table class="table table-sm table-striped table-bordered">
+		  <thead>
+			<tr>
+			  <th scope="col">#</th>
+			  <?php $namaKapal = ExecuteRows("SELECT kapal_nama FROM v102_result group by kapal_nama"); ?>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <th scope="col"><?php echo $namaKapal[$k-1][0]; ?></th>
+			  <?php } ?>
+			  <th>Total Cost</th>
+			  <th>Cargo Flow</th>
+			  <th>Kapasitas</th>
+			</tr>
+		  </thead>
+		  <tbody>
 
-						<!-- kolom d[1], d[2], d[n] -->
-						<!-- kolom pertama -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-center">d<?php echo $i; ?></div></div>
-								<?php } ?>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
-								
-						<!-- kolom d[1], d[2], d[n]  -->
-						<!-- kolom kedua, kolom[n-2] -->
-						<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-						<?php   $totalTc[$i] = 0; ?>
-						<?php   $totalCargo[$i] = 0; ?>
-						<?php } ?>
-						<?php $namaKapal = ExecuteRows("SELECT kapal_nama FROM v102_result group by kapal_nama"); ?>
-						<?php for ($d = 1; $d <= $jumlahKapal; $d++) { ?>
-						<?php   $row = 1; ?>
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center"><?php echo $namaKapal[$d-1][0]; ?></div></div>
-								<?php $totalKapal = 0; ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)], 2); ?></div></div>
-								<?php   $totalKapal += $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-								<?php   $totalCargo[$i] += $cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-								<?php   $totalTc[$i] += $tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalKapal); ?></div></div>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($rJumlah[$d-1][0]); ?></div></div>
-							</div>
-						</div>
-						<?php } ?>
+		    <!-- detail -->
+		    <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+		    <?php   $totalKapal[$k] = 0; ?>
+		    <?php   $gTotalTc       = 0; ?>
+		    <?php   $gTotalCargo    = 0; ?>
+		    <?php } ?>
+			<?php for ($d = 1; $d <= $jumlahDistribusi; $d++) { ?>
+			<tr>
+			  <th scope="row">d<?php echo $d; ?></th>
+			  <?php $totalTc[$d]    = 0; ?>
+			  <?php $totalCargo[$d] = 0; ?>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <td class="text-right"><?php echo number_format($kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)], 2); ?></td>
+			  <?php   $totalKapal[$k] += $kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php   $totalTc[$d]    += $tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php   $totalCargo[$d] += $cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php } ?>
+			  <td class="text-right"><?php echo number_format($totalTc[$d]); ?></td>
+			  <td class="text-right"><?php echo number_format($totalCargo[$d]); ?></td>
+			  <td class="text-right"><?php echo number_format($demand[$d-1][0]); ?></td>
+			  <?php $gTotalTc    += $totalTc[$d]; ?>
+			  <?php $gTotalCargo += $totalCargo[$d]; ?>
+			</tr>
+			<?php } ?>
 
-						<!-- 2 kolom sebelum kolom terakhir -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">Total Cost</div></div>
-								<?php $gtTc = 0;?>
-								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
-								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalTc[$i]); ?></div></div>
-								<?php   $gtTc += $totalTc[$i]; ?>
-								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtTc); ?></div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
+			<!-- 1 baris sebelum baris terakhir -->
+			<tr>
+			  <th>&nbsp;</th>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <th scope="row" class="text-right"><?php echo number_format($totalKapal[$k], 2); ?></th>
+			  <?php } ?>
+			  <th scope="row" class="text-right"><?php echo number_format($gTotalTc); ?></th>
+			  <th scope="row" class="text-right"><?php echo number_format($gTotalCargo); ?></th>
+			  <th>&nbsp;</th>
+			</tr>
 
-						<!-- 1 kolom sebelum kolom terakhir -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">Cargo Flow</div></div>
-								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
-								<?php $gtCargo = 0;?>
-								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalCargo[$i]); ?></div></div>
-								<?php   $gtCargo += $totalCargo[$i]; ?>
-								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtCargo); ?></div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
-								
-						<!-- kolom terakhir -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">Kapasitas</div></div>
-								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
-								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($demand[$d-1][0]); ?></div></div>
-								<?php } ?>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
-							
-					<?php } ?>
-					<!-- end of tabel 1    -->
-							
-				</div>
-			</div>
-		</div>
+			<!-- baris terakhir -->
+			<tr>
+			  <th>&nbsp;</th>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <th scope="row" class="text-right"><?php echo number_format($rJumlah[$k-1][0]); ?></th>
+			  <?php } ?>
+			  <th>&nbsp;</th>
+			  <th>&nbsp;</th>
+			  <th>&nbsp;</th>
+			</tr>
+			
+		  </tbody>
+		</table>
+	  </div>
 	</div>
-	<!-- end of individu optimum -->
+  </div>
 </div>
+<!-- end of individu optimum -->
 
+
+<!-- cargo terangkut -->
 <div class="row">
-	<!-- cargo terangkut -->
-	<div class="col-sm-12">
-		<div class="card">
-			<div class="card-header">
-				Cargo Terangkut
-			</div>
-			<div class="card-body">
-					
-				<div class="row">
-							
-					<!-- tabel 1            -->
-					<!-- baris = distribusi -->
-					<!-- kolom = kapal      -->
-					<?php if ($jumlahDistribusi > 0) { ?>
+  <div class="col-sm-12">
+	<div class="card">
+	  <div class="card-header"><strong>Cargo Terangkut</strong></div>
+	  <div class="card-body">
+		<table class="table table-sm table-striped table-bordered">
+		  <thead>
+			<tr>
+			  <th scope="col">#</th>
+			  <?php $namaKapal = ExecuteRows("SELECT kapal_nama FROM v102_result group by kapal_nama"); ?>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <th scope="col"><?php echo $namaKapal[$k-1][0]; ?></th>
+			  <?php } ?>
+			  <th>Total Cost</th>
+			  <th>Cargo Flow</th>
+			  <th>Kapasitas</th>
+			</tr>
+		  </thead>
+		  <tbody>
 
-						<!-- kolom d[1], d[2], d[n] -->
-						<!-- kolom pertama -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-center">d<?php echo $i; ?></div></div>
-								<?php } ?>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
-								
-						<!-- kolom d[1], d[2], d[n] -->
-						<!-- kolom kedua, kolom[n-2] -->
-						<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-						<?php   $totalTc[$i] = 0; ?>
-						<?php   $totalCargo[$i] = 0; ?>
-						<?php } ?>
-						<?php for ($d = 1; $d <= $jumlahKapal; $d++) { ?>
-						<?php   $row = 1; ?>
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center"><?php echo $namaKapal[$d-1][0]; ?></div></div>
-								<?php $totalKapal = 0; ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]); ?></div></div>
-								<?php   $totalKapal += $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-								<?php   $totalCargo[$i] += $cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-								<?php   $totalTc[$i] += $tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark white text-right"><?php echo number_format($totalKapal); ?></div></div>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($rJumlah[$d-1][0]); ?></div></div>
-							</div>
-						</div>
-						<?php } ?>
+		    <!-- detail -->
+		    <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+		    <?php   $totalKapal[$k] = 0; ?>
+		    <?php   $gTotalTc       = 0; ?>
+		    <?php   $gTotalCargo    = 0; ?>
+		    <?php } ?>
+			<?php for ($d = 1; $d <= $jumlahDistribusi; $d++) { ?>
+			<tr>
+			  <th scope="row">d<?php echo $d; ?></th>
+			  <?php $totalTc[$d]    = 0; ?>
+			  <?php $totalCargo[$d] = 0; ?>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <td class="text-right"><?php echo number_format($cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]); ?></td>
+			  <?php   $totalKapal[$k] += $kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php   $totalTc[$d]    += $tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php   $totalCargo[$d] += $cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php } ?>
+			  <td class="text-right"><?php echo number_format($totalTc[$d]); ?></td>
+			  <td class="text-right"><?php echo number_format($totalCargo[$d]); ?></td>
+			  <td class="text-right"><?php echo number_format($demand[$d-1][0]); ?></td>
+			  <?php $gTotalTc    += $totalTc[$d]; ?>
+			  <?php $gTotalCargo += $totalCargo[$d]; ?>
+			</tr>
+			<?php } ?>
 
-						<!-- 2 kolom sebelum kolom terakhir -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">Total Cost</div></div>
-								<?php $gtTc = 0;?>
-								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
-								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalTc[$i]); ?></div></div>
-								<?php   $gtTc += $totalTc[$i]; ?>
-								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtTc); ?></div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
-								
-						<!-- 1 kolom sebelum kolom terakhir -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">Cargo Flow</div></div>
-								<?php $gtCargo = 0;?>
-								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
-								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalCargo[$i]); ?></div></div>
-								<?php   $gtCargo += $totalCargo[$i]; ?>
-								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtCargo); ?></div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
+			<!-- 1 baris sebelum baris terakhir -->
+			<tr>
+			  <th>&nbsp;</th>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <th scope="row" class="text-right"><?php echo number_format($totalKapal[$k], 2); ?></th>
+			  <?php } ?>
+			  <th scope="row" class="text-right"><?php echo number_format($gTotalTc); ?></th>
+			  <th scope="row" class="text-right"><?php echo number_format($gTotalCargo); ?></th>
+			  <th>&nbsp;</th>
+			</tr>
 
-						<!-- kolom terakhir -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">Kapasitas</div></div>
-								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
-								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($demand[$d-1][0]); ?></div></div>
-								<?php } ?>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
-							
-					<?php } ?>
-					<!-- end of tabel 1    -->
-							
-				</div>
-			</div>
-		</div>
+			<!-- baris terakhir -->
+			<tr>
+			  <th>&nbsp;</th>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <th scope="row" class="text-right"><?php echo number_format($rJumlah[$k-1][0]); ?></th>
+			  <?php } ?>
+			  <th>&nbsp;</th>
+			  <th>&nbsp;</th>
+			  <th>&nbsp;</th>
+			</tr>
+			
+		  </tbody>
+		</table>
+	  </div>
 	</div>
-	<!-- end of cargo terangkut -->
+  </div>
 </div>
+<!-- end of cargo terangkut -->
 
+
+<!-- total cost -->
 <div class="row">
-	<!-- total cost -->
-	<div class="col-sm-12">
-		<div class="card">
-			<div class="card-header">
-				Total Cost
-			</div>
-			<div class="card-body">
-					
-				<div class="row">
-							
-					<!-- tabel 1            -->
-					<!-- baris = distribusi -->
-					<!-- kolom = kapal      -->
-					<?php if ($jumlahDistribusi > 0) { ?>
+  <div class="col-sm-12">
+	<div class="card">
+	  <div class="card-header"><strong>Total Cost</strong></div>
+	  <div class="card-body">
+		<table class="table table-sm table-striped table-bordered">
+		  <thead>
+			<tr>
+			  <th scope="col">#</th>
+			  <?php $namaKapal = ExecuteRows("SELECT kapal_nama FROM v102_result group by kapal_nama"); ?>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <th scope="col"><?php echo $namaKapal[$k-1][0]; ?></th>
+			  <?php } ?>
+			  <th>Total Cost</th>
+			  <th>Cargo Flow</th>
+			  <th>Kapasitas</th>
+			</tr>
+		  </thead>
+		  <tbody>
 
-						<!-- kolom d[1], d[2], d[n] -->
-						<!-- kolom pertama -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-center">d<?php echo $i; ?></div></div>
-								<?php } ?>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
-								
-						<!-- kolom d[1], d[2], d[n] -->
-						<!-- kolom kedua, kolom[n-2] -->
-						<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-						<?php   $totalTc[$i] = 0; ?>
-						<?php } ?>
-						<?php for ($d = 1; $d <= $jumlahKapal; $d++) { ?>
-						<?php   $row = 1; ?>
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center"><?php echo $namaKapal[$d-1][0]; ?></div></div>
-								<?php $totalKapal = 0; ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]); ?></div></div>
-								<?php   $totalKapal += $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-								<?php   $totalTc[$i] += $tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
-								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark white text-right"><?php echo number_format($totalKapal); ?></div></div>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($rJumlah[$d-1][0]); ?></div></div>
-							</div>
-						</div>
-						<?php } ?>
+		    <!-- detail -->
+		    <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+		    <?php   $totalKapal[$k] = 0; ?>
+		    <?php   $gTotalTc       = 0; ?>
+		    <?php   $gTotalCargo    = 0; ?>
+		    <?php } ?>
+			<?php for ($d = 1; $d <= $jumlahDistribusi; $d++) { ?>
+			<tr>
+			  <th scope="row">d<?php echo $d; ?></th>
+			  <?php $totalTc[$d]    = 0; ?>
+			  <?php $totalCargo[$d] = 0; ?>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <td class="text-right"><?php echo number_format($tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]); ?></td>
+			  <?php   $totalKapal[$k] += $kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php   $totalTc[$d]    += $tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php   $totalCargo[$d] += $cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php } ?>
+			  <td class="text-right"><?php echo number_format($totalTc[$d]); ?></td>
+			  <td class="text-right"><?php echo number_format($totalCargo[$d]); ?></td>
+			  <td class="text-right"><?php echo number_format($demand[$d-1][0]); ?></td>
+			  <?php $gTotalTc    += $totalTc[$d]; ?>
+			  <?php $gTotalCargo += $totalCargo[$d]; ?>
+			</tr>
+			<?php } ?>
 
-						<!-- 2 kolom sebelum kolom terakhir -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">Total Cost</div></div>
-								<?php $gtTc = 0;?>
-								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
-								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalTc[$i]); ?></div></div>
-								<?php   $gtTc += $totalTc[$i]; ?>
-								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtTc); ?></div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
-								
-						<!-- 1 kolom sebelum kolom terakhir -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">Cargo Flow</div></div>
-								<?php $gtCargo = 0;?>
-								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
-								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalCargo[$i]); ?></div></div>
-								<?php   $gtCargo += $totalCargo[$i]; ?>
-								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtCargo); ?></div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
+			<!-- 1 baris sebelum baris terakhir -->
+			<tr>
+			  <th>&nbsp;</th>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <th scope="row" class="text-right"><?php echo number_format($totalKapal[$k], 2); ?></th>
+			  <?php } ?>
+			  <th scope="row" class="text-right"><?php echo number_format($gTotalTc); ?></th>
+			  <th scope="row" class="text-right"><?php echo number_format($gTotalCargo); ?></th>
+			  <th>&nbsp;</th>
+			</tr>
 
-						<!-- kolom terakhir -->
-						<div class="col-sm-1">
-							<div class="p-1">
-								<div class="form-group row"><div class="col bg-light text-dark text-center">Kapasitas</div></div>
-								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
-								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
-								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($demand[$d-1][0]); ?></div></div>
-								<?php } ?>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
-							</div>
-						</div>
-							
-					<?php } ?>
-					<!-- end of tabel 1    -->
-							
-				</div>
-			</div>
-		</div>
+			<!-- baris terakhir -->
+			<tr>
+			  <th>&nbsp;</th>
+			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
+			  <th scope="row" class="text-right"><?php echo number_format($rJumlah[$k-1][0]); ?></th>
+			  <?php } ?>
+			  <th>&nbsp;</th>
+			  <th>&nbsp;</th>
+			  <th>&nbsp;</th>
+			</tr>
+			
+		  </tbody>
+		</table>
+	  </div>
 	</div>
-	<!-- end of total cost -->
+  </div>
 </div>
+<!-- end of total cost -->
+
 
 <!-- grafik -->
 <div class="row">
@@ -731,8 +639,16 @@ for ($g = 0; $g <= $generasi; $g++) {
 	</div>
 </div>
 
+<style type="text/css">
+  @media print{
+	.no-print{
+	  display: none;
+	}
+  }
+</style>
+
 <!-- button -->
-<div class="row">
+<div class="row no-print">
 	<!-- proses -->
 	<div class="col-sm-12">
 		<div class="card">
@@ -794,7 +710,7 @@ function drawBasic() {
 	  title: 'Total Cost'
 	},
 	width: '100%',
-	height: '500',
+	height: '400',
 	curveType: 'function',
 	title: 'Grafik Brute Force'
   };

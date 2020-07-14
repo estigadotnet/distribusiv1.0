@@ -137,8 +137,8 @@ $t001_kapal_add->showMessage();
 $selwrk = ConvertToBool($t001_kapal_add->Diproses->CurrentValue) ? " checked" : "";
 ?>
 <div class="custom-control custom-checkbox d-inline-block">
-	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x_Diproses[]" id="x_Diproses[]_604359" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_add->Diproses->editAttributes() ?>>
-	<label class="custom-control-label" for="x_Diproses[]_604359"></label>
+	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x_Diproses[]" id="x_Diproses[]_591533" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_add->Diproses->editAttributes() ?>>
+	<label class="custom-control-label" for="x_Diproses[]_591533"></label>
 </div>
 </span>
 <?php echo $t001_kapal_add->Diproses->CustomMsg ?></div></div>
