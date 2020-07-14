@@ -247,42 +247,58 @@ for ($g = 0; $g <= $generasi; $g++) {
 	if (_SRD_) echo "<br>";
 
 
-	if (_SRD_) echo "<b>FC</b>";
-	if (_SRD_) echo "<br>";
+	//if (_SRD_) echo "<b>FC</b>";
+	//if (_SRD_) echo "<br>";
 	for ($i = 0; $i < $pop; $i++) {
 		$total_fc[$i] = 0;
 		for ($j = 0; $j < $kap; $j++) {
 			$fc[$i][$j] = ceil($jumlahkapal[$i][$j] * $rTch[$j][0] * 365);
 			$total_fc[$i] += $fc[$i][$j];
-			if (_SRD_) echo $fc[$i][$j] . ", ";
+			//if (_SRD_) echo $fc[$i][$j] . ", ";
 		}
-		if (_SRD_) echo "<br>";
+		//if (_SRD_) echo "<br>";
 	}
-	if (_SRD_) echo "<br>";
+	//if (_SRD_) echo "<br>";
 
 
-	if (_SRD_) echo "<b>VC</b>";
-	if (_SRD_) echo "<br>";
+	//if (_SRD_) echo "<b>VC</b>";
+	//if (_SRD_) echo "<br>";
 	for ($i = 0; $i < $pop; $i++) {
 		$total_vc[$i] = 0;
 		for ($j = 0; $j < $kap; $j++) {
 			$varcost[$i][$j] = ($kProses[$i][$j] * $rfreqmaxbytrip[$j][0]) * $rroundtrip_days[$j][0] * $rVarCost[$j][0];
 			$total_vc[$i] += $varcost[$i][$j];
-			if (_SRD_) echo $varcost[$i][$j] . ", ";
+			//if (_SRD_) echo $varcost[$i][$j] . ", ";
 		}
+		//if (_SRD_) echo "<br>";
+	}
+	//if (_SRD_) echo "<br>";
+
+
+	if (_SRD_) echo "<b>Total Cost</b>";
+	if (_SRD_) echo "<br>";
+	for ($i = 0; $i < $pop; $i++) {
+		$total_tc[$i] = 0;
+		for ($j = 0; $j < $kap; $j++) {
+			$tc[$i][$j] = $fc[$i][$j] + $varcost[$i][$j];
+			$total_tc[$i] += $tc[$i][$j];
+			if (_SRD_) echo $tc[$i][$j] . ", ";
+		}
+		if (_SRD_) echo "<br>";
+		if (_SRD_) echo "Total Cost (total): " . $total_tc[$i];
 		if (_SRD_) echo "<br>";
 	}
 	if (_SRD_) echo "<br>";
 
 
-	if (_SRD_) echo "<b>Total Cost</b>";
+	/*if (_SRD_) echo "<b>Grand-Total Total Cost</b>";
 	if (_SRD_) echo "<br>";
 	for ($i = 0; $i < $pop; $i++) {
 		$total_tc[$i] = $total_fc[$i] + $total_vc[$i];
 		if (_SRD_) echo $total_tc[$i] . ", ";
 	}
 	if (_SRD_) echo "<br>";
-	if (_SRD_) echo "<br>";
+	if (_SRD_) echo "<br>";*/
 
 
 	if (_SRD_) echo "<b>Total Cargo</b>";
@@ -299,7 +315,6 @@ for ($g = 0; $g <= $generasi; $g++) {
 
 
 	$total_fitness = 0;
-	
 	if (_SRD_) echo "<b>Nilai Fitness</b>";
 	if (_SRD_) echo "<br>";
 	for ($i = 0; $i < $pop; $i++) {
@@ -325,169 +340,188 @@ for ($g = 0; $g <= $generasi; $g++) {
 	if (_SRD_) echo "<br>";
 
 
+	// ----------------------------------------------------------------------
 	if ($g < $generasi) { // if ($g < $generasi) {
+	// ----------------------------------------------------------------------
 		
-	// seleksi
-	// buang 3 terendah, direplace dengan individu optimum
-	if (_SRD_) echo "<b>Hasil Seleksi Fitness</b>";
-	if (_SRD_) echo "<br>";
-	for ($terendah = 0; $terendah < 3; $terendah++) {
-		// ambil index key array
-		$minimum = array_keys($fitness, min($fitness));
-
-		// replace dengan individu momentum
-		$fitness[$minimum[0]] = $fitness[$index_key[0]];
-		$kProses[$minimum[0]] = $kProses[$index_key[0]];
-	}
-	for ($i = 0; $i < $pop; $i++) {
-		if (_SRD_) echo $fitness[$i];
+		// seleksi
+		// buang 3 terendah, direplace dengan individu optimum
+		if (_SRD_) echo "<b>Hasil Seleksi Fitness</b>";
 		if (_SRD_) echo "<br>";
-	}
-	if (_SRD_) echo "<br>";
-	if (_SRD_) echo "<b>Hasil Seleksi Kromosom</b>";
-	if (_SRD_) echo "<br>";
-	for ($i = 0; $i < $pop; $i++) {
-		for ($j = 0; $j < $kap; $j++) {
-			if (_SRD_) echo $kProses[$i][$j].", ";
+		for ($terendah = 0; $terendah < 3; $terendah++) {
+			// ambil index key array
+			$minimum = array_keys($fitness, min($fitness));
+
+			// replace dengan individu momentum
+			$fitness[$minimum[0]] = $fitness[$index_key[0]];
+			$kProses[$minimum[0]] = $kProses[$index_key[0]];
+		}
+		for ($i = 0; $i < $pop; $i++) {
+			if (_SRD_) echo $fitness[$i];
+			if (_SRD_) echo "<br>";
 		}
 		if (_SRD_) echo "<br>";
-	}
-	if (_SRD_) echo "<br>";
-
-
-	// crossover
-	$kSel = $kProses; //$fTampung;
-	$aSatu = array();
-	$aDua  = array();
-	if (_SRD_) echo "<b>Hasil Crossover</b>";
-	if (_SRD_) echo "<br>";
-	for ($i = 0; $i < $pop; $i++) {
-		for ($j = 0; $j < $kap; $j++) {
-			if ($j <= 4 and $i % 2 == 0) {
-				$aSatu[$j] = $kProses[$i][$j];
+		if (_SRD_) echo "<b>Hasil Seleksi Kromosom</b>";
+		if (_SRD_) echo "<br>";
+		for ($i = 0; $i < $pop; $i++) {
+			for ($j = 0; $j < $kap; $j++) {
+				if (_SRD_) echo $kProses[$i][$j].", ";
 			}
-			if ($j <= 4 and $i % 2 == 1) {
-				$aDua[$j] = $kProses[$i][$j];
-			}
-		}
-		if ($i % 2 == 0) {
-		}
-		if ($i % 2 == 1) {
-			for ($x = 0; $x < count($aSatu); $x++) {
-				$kSel[$i][$x]   = $aSatu[$x];
-				$kSel[$i-1][$x] = $aDua[$x];
-			}
-			$aSatu = array();
-			$aDua  = array();
-		}
-	}
-	for ($i = 0; $i < $pop; $i++) {
-		for ($j = 0; $j < $kap; $j++) {
-			if (_SRD_) echo $kSel[$i][$j].", ";
+			if (_SRD_) echo "<br>";
 		}
 		if (_SRD_) echo "<br>";
-	}
-	if (_SRD_) echo "<br>";
 
 
-	//mutasi
-	$kMutasi = $kSel;
-	$arMutasi = array();
-	$jumlahMutasi = $jumlahKapal * $jumlahDistribusi * $populasi; //echo $jumlahMutasi;
-	for ($m = 0; $m < $jumlahMutasi; $m++) {
-		$arMutasi[$m] = $m;
-	}
-
-	// acak posisi
-	shuffle($arMutasi);
-
-	if (_SRD_) echo "<b>Mutasi Point</b>";
-	if (_SRD_) echo "<br>";
-	for ($n = 0; $n < ($jumlahMutasi * $mutasi); $n++) {
-		$posisi = $arMutasi[$n];
-		if (_SRD_) echo $posisi.", ";
-		$posisiPop = intval($posisi/($jumlahKapal * $jumlahDistribusi));
-		$posisiGen = $posisi % ($jumlahKapal * $jumlahDistribusi);
-		//$kMutasi[$posisiPop][$posisiGen] = $kMutasi[$posisiPop][$posisiGen] + 0.01;
-		$kMutasi[$posisiPop][$posisiGen] = number_format(rand(0, 100) / 100, 2);
-	}
-	if (_SRD_) echo "<br>";
-	if (_SRD_) echo "<br>";
-	if (_SRD_) echo "<b>Hasil Mutasi</b>";
-	if (_SRD_) echo "<br>";
-	for ($i = 0; $i < $pop; $i++) {
-		for ($j = 0; $j < $kap; $j++) {
-			if (_SRD_) echo $kMutasi[$i][$j].", ";
+		// crossover
+		$kSel = $kProses; //$fTampung;
+		$aSatu = array();
+		$aDua  = array();
+		if (_SRD_) echo "<b>Hasil Crossover</b>";
+		if (_SRD_) echo "<br>";
+		for ($i = 0; $i < $pop; $i++) {
+			for ($j = 0; $j < $kap; $j++) {
+				if ($j <= 4 and $i % 2 == 0) {
+					$aSatu[$j] = $kProses[$i][$j];
+				}
+				if ($j <= 4 and $i % 2 == 1) {
+					$aDua[$j] = $kProses[$i][$j];
+				}
+			}
+			if ($i % 2 == 0) {
+			}
+			if ($i % 2 == 1) {
+				for ($x = 0; $x < count($aSatu); $x++) {
+					$kSel[$i][$x]   = $aSatu[$x];
+					$kSel[$i-1][$x] = $aDua[$x];
+				}
+				$aSatu = array();
+				$aDua  = array();
+			}
+		}
+		for ($i = 0; $i < $pop; $i++) {
+			for ($j = 0; $j < $kap; $j++) {
+				if (_SRD_) echo $kSel[$i][$j].", ";
+			}
+			if (_SRD_) echo "<br>";
 		}
 		if (_SRD_) echo "<br>";
-	}
-	if (_SRD_) echo "<br>";
 
 
-	// replacement ada di sini sebelum nya
+		//mutasi
+		$kMutasi = $kSel;
+		$arMutasi = array();
+		$jumlahMutasi = $jumlahKapal * $jumlahDistribusi * $populasi; //echo $jumlahMutasi;
+		for ($m = 0; $m < $jumlahMutasi; $m++) {
+			$arMutasi[$m] = $m;
+		}
+
+		// acak posisi
+		shuffle($arMutasi);
+
+		if (_SRD_) echo "<b>Mutasi Point</b>";
+		if (_SRD_) echo "<br>";
+		for ($n = 0; $n < ($jumlahMutasi * $mutasi); $n++) {
+			$posisi = $arMutasi[$n];
+			if (_SRD_) echo $posisi.", ";
+			$posisiPop = intval($posisi/($jumlahKapal * $jumlahDistribusi));
+			$posisiGen = $posisi % ($jumlahKapal * $jumlahDistribusi);
+			//$kMutasi[$posisiPop][$posisiGen] = $kMutasi[$posisiPop][$posisiGen] + 0.01;
+			$kMutasi[$posisiPop][$posisiGen] = number_format(rand(0, 100) / 100, 2);
+		}
+		if (_SRD_) echo "<br>";
+		if (_SRD_) echo "<br>";
+		if (_SRD_) echo "<b>Hasil Mutasi</b>";
+		if (_SRD_) echo "<br>";
+		for ($i = 0; $i < $pop; $i++) {
+			for ($j = 0; $j < $kap; $j++) {
+				if (_SRD_) echo $kMutasi[$i][$j].", ";
+			}
+			if (_SRD_) echo "<br>";
+		}
+		if (_SRD_) echo "<br>";
+
+
+		// replacement ada di sini sebelum nya
 	
-	if (_SRD_) echo "<br>";
-
-	// copykan hasil replacement ke kromosom baru untuk
-	// persiapan generasi berikutnya
-	$kProses = $kMutasi;
+		// copykan hasil replacement ke kromosom baru untuk
+		// persiapan generasi berikutnya
+		$kProses = $kMutasi;
 
 
-	// check stopping criteria "time"
-	$end = microtime(true);
-	$selisih += $end - $start;
-	if ($stopping == "time") {
-		if (_SRD_) echo "<pre>";
-		if (_SRD_) echo "start    : ".$start."<br>";
-		if (_SRD_) echo "end      : ".$end."<br>";
-		if (_SRD_) echo "selisih  : ".$selisih."<br>";
-		if (_SRD_) echo "durasi   : ".$durasi."<br>";
-		if (_SRD_) echo "generasi : ".$generasi."<br>";
-		if (_SRD_) echo "g        : ".$g."<br>";
-		if (_SRD_) echo "</pre>";
-		if ($selisih >= $durasi) {
-			$generasi = $g; // trigger untuk exit for
-		}
-	}
+		// yang lama di sini akhir loop tiap generasinya}
+		// yang lama di sini akhir loop tiap generasinya} end if ($g < $generasi) {
 
-
+	// ----------------------------------------------------------------------
 	}
 	// end if ($g < $generasi) {
+	// ----------------------------------------------------------------------
 
-	// replacement
-	// create array per kapal
-	for ($k = 1; $k <= $jumlahKapal; $k++) {
-		for ($d = 1; $d <= $jumlahDistribusi; $d++) {
-			$arrKapal[$k][(($jumlahKapal * $d)-$jumlahKapal)+($k-1)] = $kProses[$index_key[0]][(($jumlahKapal * $d)-$jumlahKapal)+($k-1)];
+
+		// replacement
+		// create array per kapal
+		for ($k = 1; $k <= $jumlahKapal; $k++) {
+			for ($d = 1; $d <= $jumlahDistribusi; $d++) {
+				$arrKapal[$k][(($jumlahKapal * $d)-$jumlahKapal)+($k-1)] = $kProses[$index_key[0]][(($jumlahKapal * $d)-$jumlahKapal)+($k-1)];
+			}
 		}
-	}
-	// check constraint per kapal
-	for ($k = 1; $k <= $jumlahKapal; $k++) {
-		$hasilSum = array_sum($arrKapal[$k]);
-		while ($hasilSum >= $rJumlah[$k-1][0]) {
-			// cari index terkecil
-			$indexKey = array_keys($arrKapal[$k], min(array_filter($arrKapal[$k], function($varx) {return $varx != 0;})));
+		// check constraint per kapal
+		for ($k = 1; $k <= $jumlahKapal; $k++) {
+			$hasilSum = array_sum($arrKapal[$k]);
+			while ($hasilSum >= $rJumlah[$k-1][0]) {
+				// cari index terkecil
+				$indexKey = array_keys($arrKapal[$k], min(array_filter($arrKapal[$k], function($varx) {return $varx != 0;})));
 
-			// lakukan replacement 1 array menjadi 0
-			$arrKapal[$k][$indexKey[0]] = 0.00;
+				// lakukan replacement 1 array menjadi 0
+				$arrKapal[$k][$indexKey[0]] = 0.00;
+				$kProses[$index_key[0]][$indexKey[0]] = 0.00;
+				$cargoterangkut[$index_key[0]][$indexKey[0]] = 0.00;
+				$total_tc[$index_key[0]] -= $tc[$index_key[0]][$indexKey[0]];
+				$tc[$index_key[0]][$indexKey[0]] = 0.00;
+				$fitness[$index_key[0]] = $total_tc[$index_key[0]] / _MC_;
+
+				// lalu di-sum lagi
+				$hasilSum = array_sum($arrKapal[$k]);
+			}
+		}
+		// check constraint total distribusi, harus di bawah demand
+		$sumCargo = array_sum($cargoterangkut[$index_key[0]]);
+		while ($sumCargo >= ExecuteScalar("select Nilai from t006_parameter where Nama = 'Demand'")) {
+			$indexKey = array_keys($cargoterangkut[$index_key[0]], max(array_filter($cargoterangkut[$index_key[0]], function($varx) {return $varx != 0;})));
 			$kProses[$index_key[0]][$indexKey[0]] = 0.00;
 			$cargoterangkut[$index_key[0]][$indexKey[0]] = 0.00;
-				
-			// lalu di-sum lagi
-			$hasilSum = array_sum($arrKapal[$k]);
+			$total_tc[$index_key[0]] -= $tc[$index_key[0]][$indexKey[0]];
+			$tc[$index_key[0]][$indexKey[0]] = 0.00;
+			$fitness[$index_key[0]] = $total_tc[$index_key[0]] / _MC_;
+			$sumCargo = array_sum($cargoterangkut[$index_key[0]]);
 		}
-	}
 
-	// check constraint total distribusi, harus di bawah demand
-	$sumCargo = array_sum($cargoterangkut[$index_key[0]]);
-	while ($sumCargo >= ExecuteScalar("select Nilai from t006_parameter where Nama = 'Demand'")) {
-		$indexKey = array_keys($cargoterangkut[$index_key[0]], max(array_filter($cargoterangkut[$index_key[0]], function($varx) {return $varx != 0;})));
-		$kProses[$index_key[0]][$indexKey[0]] = 0.00;
-		$cargoterangkut[$index_key[0]][$indexKey[0]] = 0.00;
-		$sumCargo = array_sum($cargoterangkut[$index_key[0]]);
-	}
+		if (_SRD_) echo "<b>Hasil Replacement & Check Constraint</b>";
+		if (_SRD_) echo "<br>";
+		for ($i = 0; $i < $pop; $i++) {
+			for ($j = 0; $j < $kap; $j++) {
+				if (_SRD_) echo $kProses[$i][$j].", ";
+			}
+			if (_SRD_) echo "<br>";
+		}
+		if (_SRD_) echo "<br>";
 
-	//$kProses = $kMutasi;
+		// check stopping criteria "time"
+		$end = microtime(true);
+		$selisih += $end - $start;
+		if ($stopping == "time") {
+			if (_SRD_) echo "<pre>";
+			if (_SRD_) echo "start    : ".$start."<br>";
+			if (_SRD_) echo "end      : ".$end."<br>";
+			if (_SRD_) echo "selisih  : ".$selisih."<br>";
+			if (_SRD_) echo "durasi   : ".$durasi."<br>";
+			if (_SRD_) echo "generasi : ".$generasi."<br>";
+			if (_SRD_) echo "g        : ".$g."<br>";
+			if (_SRD_) echo "</pre>";
+			if ($selisih >= $durasi) {
+				$generasi = $g; // trigger untuk exit for
+			}
+		}
+
 
 	// simpan ke tabel, dengan cara seleksi
 	$q = "insert into
@@ -499,7 +533,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 			$recordPertama = 2;
 			$total_tcAcuan = $total_tc[$index_key[0]];
 			$total_cfAcuan = $total_cf[$index_key[0]];
-			$fitnessAcuan  = (_MP_ == 'max' ? max($fitness) : min($fitness));
+			$fitnessAcuan  = $fitness[$index_key[0]]; //(_MP_ == 'max' ? max($fitness) : min($fitness));
 			$kromosomAcuan = serialize($kProses[$index_key[0]]);
 		}
 		else {
@@ -507,7 +541,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 				if ($fitness[$index_key[0]] > $fitnessAcuan) {
 					$total_tcAcuan = $total_tc[$index_key[0]];
 					$total_cfAcuan = $total_cf[$index_key[0]];
-					$fitnessAcuan  = (_MP_ == 'max' ? max($fitness) : min($fitness));
+					$fitnessAcuan  = $fitness[$index_key[0]]; //(_MP_ == 'max' ? max($fitness) : min($fitness));
 					$kromosomAcuan = serialize($kProses[$index_key[0]]);
 				}
 				else {
@@ -519,13 +553,15 @@ for ($g = 0; $g <= $generasi; $g++) {
 				else {
 					$total_tcAcuan = $total_tc[$index_key[0]];
 					$total_cfAcuan = $total_cf[$index_key[0]];
-					$fitnessAcuan  = (_MP_ == 'max' ? max($fitness) : min($fitness));
+					$fitnessAcuan  = $fitness[$index_key[0]]; //(_MP_ == 'max' ? max($fitness) : min($fitness));
 					$kromosomAcuan = serialize($kProses[$index_key[0]]);
 				}
 			}
 		}
 	$q = $q . $total_tcAcuan.", ".$total_cfAcuan.", ".$fitnessAcuan.", '".$kromosomAcuan."', ".$g.")";
+	//if ($g > 0) {
 	Execute($q);
+	//}
 
 	if ($simpanPertama == 1) {
 		$simpanPertama = 2;
@@ -607,11 +643,11 @@ for ($g = 0; $g <= $generasi; $g++) {
 	<!-- ./Operator GA -->
 
 </div>
-<div class="row">
 
-	<?php if ($jumlahKapal > 0 or $jumlahDistribusi > 0) { ?>
-			
-	<!-- proses total ke bawah -->
+<?php if ($jumlahKapal > 0 or $jumlahDistribusi > 0) { ?>
+
+<div class="row">
+	<!-- individu optimum -->
 	<div class="col-sm-12">
 		<div class="card">
 			<div class="card-header">
@@ -642,6 +678,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 						<!-- kolom d[1], d[2], d[n]  -->
 						<!-- kolom kedua, kolom[n-2] -->
 						<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
+						<?php   $totalTc[$i] = 0; ?>
 						<?php   $totalCargo[$i] = 0; ?>
 						<?php } ?>
 						<?php for ($d = 1; $d <= $jumlahKapal; $d++) { ?>
@@ -654,6 +691,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)], 2); ?></div></div>
 								<?php   $totalKapal += $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php   $totalCargo[$i] += $cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
+								<?php   $totalTc[$i] += $tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php } ?>
 								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalKapal); ?></div></div>
 								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($rJumlah[$d-1][0]); ?></div></div>
@@ -661,10 +699,26 @@ for ($g = 0; $g <= $generasi; $g++) {
 						</div>
 						<?php } ?>
 
-						<!-- kolom sebelum terakhir -->
+						<!-- 2 kolom sebelum kolom terakhir -->
 						<div class="col-sm-1">
 							<div class="p-1">
+								<div class="form-group row"><div class="col bg-light text-dark text-center">Total Cost</div></div>
+								<?php $gtTc = 0;?>
+								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
+								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
+								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalTc[$i]); ?></div></div>
+								<?php   $gtTc += $totalTc[$i]; ?>
+								<?php } ?>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtTc); ?></div></div>
 								<div class="form-group row"><div class="col">&nbsp;</div></div>
+							</div>
+						</div>
+
+						<!-- 1 kolom sebelum kolom terakhir -->
+						<div class="col-sm-1">
+							<div class="p-1">
+								<div class="form-group row"><div class="col bg-light text-dark text-center">Cargo Flow</div></div>
 								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
 								<?php $gtCargo = 0;?>
 								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
@@ -680,7 +734,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 						<!-- kolom terakhir -->
 						<div class="col-sm-1">
 							<div class="p-1">
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
+								<div class="form-group row"><div class="col bg-light text-dark text-center">Kapasitas</div></div>
 								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
 								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
@@ -698,12 +752,11 @@ for ($g = 0; $g <= $generasi; $g++) {
 			</div>
 		</div>
 	</div>
-	<!-- end of proses total ke bawah -->
-
+	<!-- end of individu optimum -->
 </div>
-<div class="row">
 
-	<!-- total ke kanan -->
+<div class="row">
+	<!-- cargo terangkut -->
 	<div class="col-sm-12">
 		<div class="card">
 			<div class="card-header">
@@ -734,6 +787,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 						<!-- kolom d[1], d[2], d[n] -->
 						<!-- kolom kedua, kolom[n-2] -->
 						<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
+						<?php   $totalTc[$i] = 0; ?>
 						<?php   $totalCargo[$i] = 0; ?>
 						<?php } ?>
 						<?php for ($d = 1; $d <= $jumlahKapal; $d++) { ?>
@@ -746,17 +800,34 @@ for ($g = 0; $g <= $generasi; $g++) {
 								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]); ?></div></div>
 								<?php   $totalKapal += $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php   $totalCargo[$i] += $cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
+								<?php   $totalTc[$i] += $tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php } ?>
 								<div class="form-group row"><div class="col bg-light text-dark white text-right"><?php echo number_format($totalKapal); ?></div></div>
 								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($rJumlah[$d-1][0]); ?></div></div>
 							</div>
 						</div>
 						<?php } ?>
-								
-						<!-- kolom sebelum kolom terakhir -->
+
+						<!-- 2 kolom sebelum kolom terakhir -->
 						<div class="col-sm-1">
 							<div class="p-1">
+								<div class="form-group row"><div class="col bg-light text-dark text-center">Total Cost</div></div>
+								<?php $gtTc = 0;?>
+								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
+								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
+								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalTc[$i]); ?></div></div>
+								<?php   $gtTc += $totalTc[$i]; ?>
+								<?php } ?>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtTc); ?></div></div>
 								<div class="form-group row"><div class="col">&nbsp;</div></div>
+							</div>
+						</div>
+								
+						<!-- 1 kolom sebelum kolom terakhir -->
+						<div class="col-sm-1">
+							<div class="p-1">
+								<div class="form-group row"><div class="col bg-light text-dark text-center">Cargo Flow</div></div>
 								<?php $gtCargo = 0;?>
 								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
 								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
@@ -772,7 +843,7 @@ for ($g = 0; $g <= $generasi; $g++) {
 						<!-- kolom terakhir -->
 						<div class="col-sm-1">
 							<div class="p-1">
-								<div class="form-group row"><div class="col">&nbsp;</div></div>
+								<div class="form-group row"><div class="col bg-light text-dark text-center">Kapasitas</div></div>
 								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
 								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
 								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
@@ -790,12 +861,117 @@ for ($g = 0; $g <= $generasi; $g++) {
 			</div>
 		</div>
 	</div>
-	<!-- end of total ke kanan -->
-			
-	<?php }?>
-
+	<!-- end of cargo terangkut -->
 </div>
 
+<div class="row">
+	<!-- total cost -->
+	<div class="col-sm-12">
+		<div class="card">
+			<div class="card-header">
+				Total Cost
+			</div>
+			<div class="card-body">
+					
+				<div class="row">
+							
+					<!-- tabel 1            -->
+					<!-- baris = distribusi -->
+					<!-- kolom = kapal      -->
+					<?php if ($jumlahDistribusi > 0) { ?>
+
+						<!-- kolom d[1], d[2], d[n] -->
+						<!-- kolom pertama -->
+						<div class="col-sm-1">
+							<div class="p-1">
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
+								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
+								<div class="form-group row"><div class="col bg-light text-dark text-center">d<?php echo $i; ?></div></div>
+								<?php } ?>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
+							</div>
+						</div>
+								
+						<!-- kolom d[1], d[2], d[n] -->
+						<!-- kolom kedua, kolom[n-2] -->
+						<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
+						<?php   $totalTc[$i] = 0; ?>
+						<?php } ?>
+						<?php for ($d = 1; $d <= $jumlahKapal; $d++) { ?>
+						<?php   $row = 1; ?>
+						<div class="col-sm-1">
+							<div class="p-1">
+								<div class="form-group row"><div class="col bg-light text-dark text-center">k<?php echo $d; ?></div></div>
+								<?php $totalKapal = 0; ?>
+								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]); ?></div></div>
+								<?php   $totalKapal += $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
+								<?php   $totalTc[$i] += $tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
+								<?php } ?>
+								<div class="form-group row"><div class="col bg-light text-dark white text-right"><?php echo number_format($totalKapal); ?></div></div>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($rJumlah[$d-1][0]); ?></div></div>
+							</div>
+						</div>
+						<?php } ?>
+
+						<!-- 2 kolom sebelum kolom terakhir -->
+						<div class="col-sm-1">
+							<div class="p-1">
+								<div class="form-group row"><div class="col bg-light text-dark text-center">Total Cost</div></div>
+								<?php $gtTc = 0;?>
+								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
+								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
+								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalTc[$i]); ?></div></div>
+								<?php   $gtTc += $totalTc[$i]; ?>
+								<?php } ?>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtTc); ?></div></div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
+							</div>
+						</div>
+								
+						<!-- 1 kolom sebelum kolom terakhir -->
+						<div class="col-sm-1">
+							<div class="p-1">
+								<div class="form-group row"><div class="col bg-light text-dark text-center">Cargo Flow</div></div>
+								<?php $gtCargo = 0;?>
+								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
+								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
+								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalCargo[$i]); ?></div></div>
+								<?php   $gtCargo += $totalCargo[$i]; ?>
+								<?php } ?>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($gtCargo); ?></div></div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
+							</div>
+						</div>
+
+						<!-- kolom terakhir -->
+						<div class="col-sm-1">
+							<div class="p-1">
+								<div class="form-group row"><div class="col bg-light text-dark text-center">Kapasitas</div></div>
+								<?php //$q = "select Nilai from t006_parameter where Nama = 'Demand'"; $demand = ExecuteScalar($q); ?>
+								<?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
+								<?php for ($i = 1; $i <= $jumlahDistribusi; $i++) { ?>
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($demand[$d-1][0]); ?></div></div>
+								<?php } ?>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
+								<div class="form-group row"><div class="col">&nbsp;</div></div>
+							</div>
+						</div>
+							
+					<?php } ?>
+					<!-- end of tabel 1    -->
+							
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end of total cost -->
+</div>
+
+<!-- grafik -->
 <div class="row">
 	<div class="col-sm-12">
 		<div class="card">
@@ -813,8 +989,8 @@ for ($g = 0; $g <= $generasi; $g++) {
 	</div>
 </div>
 
+<!-- button -->
 <div class="row">
-
 	<!-- proses -->
 	<div class="col-sm-12">
 		<div class="card">
@@ -841,12 +1017,13 @@ for ($g = 0; $g <= $generasi; $g++) {
 		</div>
 	</div>
 	<!-- ./proses -->
-
 </div>
 <!-- ./row -->
 
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-	<script type="text/javascript">
+<?php }?>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
 google.charts.load('current', {
   packages: ['corechart']
 });
@@ -885,8 +1062,7 @@ function drawBasic() {
   chart.draw(data, options);
 }
 
-	</script>
-
+</script>
 
 <?php if (Config("DEBUG")) echo GetDebugMessage(); ?>
 <?php include_once "footer.php"; ?>
