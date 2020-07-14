@@ -362,8 +362,8 @@ $t001_kapal_list->ListOptions->render("body", "left", $t001_kapal_list->RowCount
 $selwrk = ConvertToBool($t001_kapal_list->Diproses->CurrentValue) ? " checked" : "";
 ?>
 <div class="custom-control custom-checkbox d-inline-block">
-	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_664987" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_list->Diproses->editAttributes() ?>>
-	<label class="custom-control-label" for="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_664987"></label>
+	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_313592" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_list->Diproses->editAttributes() ?>>
+	<label class="custom-control-label" for="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_313592"></label>
 </div>
 </span>
 <input type="hidden" data-table="t001_kapal" data-field="x_Diproses" name="o<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="o<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" value="<?php echo HtmlEncode($t001_kapal_list->Diproses->OldValue) ?>">
@@ -374,8 +374,8 @@ $selwrk = ConvertToBool($t001_kapal_list->Diproses->CurrentValue) ? " checked" :
 $selwrk = ConvertToBool($t001_kapal_list->Diproses->CurrentValue) ? " checked" : "";
 ?>
 <div class="custom-control custom-checkbox d-inline-block">
-	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_509817" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_list->Diproses->editAttributes() ?>>
-	<label class="custom-control-label" for="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_509817"></label>
+	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_837214" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_list->Diproses->editAttributes() ?>>
+	<label class="custom-control-label" for="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_837214"></label>
 </div>
 </span>
 <?php } ?>
@@ -446,8 +446,8 @@ $t001_kapal_list->ListOptions->render("body", "left", $t001_kapal_list->RowIndex
 $selwrk = ConvertToBool($t001_kapal_list->Diproses->CurrentValue) ? " checked" : "";
 ?>
 <div class="custom-control custom-checkbox d-inline-block">
-	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_337936" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_list->Diproses->editAttributes() ?>>
-	<label class="custom-control-label" for="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_337936"></label>
+	<input type="checkbox" class="custom-control-input" data-table="t001_kapal" data-field="x_Diproses" name="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_224136" value="1"<?php echo $selwrk ?><?php echo $t001_kapal_list->Diproses->editAttributes() ?>>
+	<label class="custom-control-label" for="x<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]_224136"></label>
 </div>
 </span>
 <input type="hidden" data-table="t001_kapal" data-field="x_Diproses" name="o<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" id="o<?php echo $t001_kapal_list->RowIndex ?>_Diproses[]" value="<?php echo HtmlEncode($t001_kapal_list->Diproses->OldValue) ?>">

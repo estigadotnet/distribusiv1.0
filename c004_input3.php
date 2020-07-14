@@ -646,6 +646,45 @@ for ($g = 0; $g <= $generasi; $g++) {
 
 <?php if ($jumlahKapal > 0 or $jumlahDistribusi > 0) { ?>
 
+<!--<div class="row">
+	<div class="col-sm-12">
+		<div class="card">
+			<div class="card-header">Individu Optimum</div>
+			<div class="card-body">
+				<table class="table table-sm table-striped table-bordered">
+					<thead>
+						<tr>
+							<th scope="col">#</th>
+							<th scope="col">First</th>
+							<th scope="col">Last</th>
+							<th scope="col">Handle</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="row">1</th>
+							<td>Mark</td>
+							<td>Otto</td>
+							<td>@mdo</td>
+						</tr>
+						<tr>
+							<th scope="row">2</th>
+							<td>Jacob</td>
+							<td>Thornton</td>
+							<td>@fat</td>
+						</tr>
+						<tr>
+							<th scope="row">3</th>
+							<td colspan="2">Larry the Bird</td>
+							<td>@twitter</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>-->
+
 <div class="row">
 	<!-- individu optimum -->
 	<div class="col-sm-12">
@@ -694,7 +733,8 @@ for ($g = 0; $g <= $generasi; $g++) {
 								<?php   $totalCargo[$i] += $cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php   $totalTc[$i] += $tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalKapal); ?></div></div>
+								<!-- <div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalKapal); ?></div></div> -->
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo $totalKapal; ?></div></div>
 								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($rJumlah[$d-1][0]); ?></div></div>
 							</div>
 						</div>
@@ -803,7 +843,8 @@ for ($g = 0; $g <= $generasi; $g++) {
 								<?php   $totalCargo[$i] += $cargoterangkut[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php   $totalTc[$i] += $tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark white text-right"><?php echo number_format($totalKapal); ?></div></div>
+								<!-- <div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalKapal); ?></div></div> -->
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo $totalKapal; ?></div></div>
 								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($rJumlah[$d-1][0]); ?></div></div>
 							</div>
 						</div>
@@ -910,7 +951,8 @@ for ($g = 0; $g <= $generasi; $g++) {
 								<?php   $totalKapal += $kProses[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php   $totalTc[$i] += $tc[$index_key[0]][(($jumlahKapal * $i)-$jumlahKapal)+($d-1)]; ?>
 								<?php } ?>
-								<div class="form-group row"><div class="col bg-light text-dark white text-right"><?php echo number_format($totalKapal); ?></div></div>
+								<!-- <div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($totalKapal); ?></div></div> -->
+								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo $totalKapal; ?></div></div>
 								<div class="form-group row"><div class="col bg-light text-dark text-right"><?php echo number_format($rJumlah[$d-1][0]); ?></div></div>
 							</div>
 						</div>
