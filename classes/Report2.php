@@ -89,7 +89,7 @@ class Report2 extends ReportTable
 		$this->fields['Kromosom'] = &$this->Kromosom;
 
 		// TotalCost
-		$this->TotalCost = new ReportField('Report2', 'Report2', 'x_TotalCost', 'TotalCost', '`TotalCost`', '`TotalCost`', 4, 14, -1, FALSE, '`TotalCost`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->TotalCost = new ReportField('Report2', 'Report2', 'x_TotalCost', 'TotalCost', '`TotalCost`', '`TotalCost`', 5, 22, -1, FALSE, '`TotalCost`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->TotalCost->Nullable = FALSE; // NOT NULL field
 		$this->TotalCost->Required = TRUE; // Required field
 		$this->TotalCost->Sortable = TRUE; // Allow sort
