@@ -30,6 +30,15 @@ Page_Rendering();
 ?>
 <?php include_once "header.php"; ?>
 <?php
+function fSimpanData($generasi, $aOptimum, $aCargo, $aTotalCost) {
+	$q = "insert into t103_resultfinal (generasi, optimum, cargo, totalcost) values (
+		".$generasi.", '".json_encode($aOptimum)."', '".json_encode($aCargo)."', '".json_encode($aTotalCost)."'
+		)";
+	Execute($q); //echo $q;
+}
+?>
+
+<?php
 
 $recordPertama    = 1;
 $jumlahKapal      = "";
@@ -72,6 +81,8 @@ define("_MC_", ExecuteScalar("select Nilai from t006_parameter where Nama = 'Max
 
 // hapus isi tabel t101_hasil
 $q = "delete from t101_result";
+Execute($q);
+$q = "delete from t103_resultfinal";
 Execute($q);
 
 	if (_SRD_) echo "<b>Jumlah Kapal</b>";
@@ -261,18 +272,18 @@ for ($g = 0; $g <= $generasi; $g++) {
 	//if (_SRD_) echo "<br>";
 
 
-	//if (_SRD_) echo "<b>VC</b>";
-	//if (_SRD_) echo "<br>";
+	if (_SRD_) echo "<b>VC</b>";
+	if (_SRD_) echo "<br>";
 	for ($i = 0; $i < $pop; $i++) {
 		$total_vc[$i] = 0;
 		for ($j = 0; $j < $kap; $j++) {
 			$varcost[$i][$j] = ($kProses[$i][$j] * $rfreqmaxbytrip[$j][0]) * $rroundtrip_days[$j][0] * $rVarCost[$j][0];
 			$total_vc[$i] += $varcost[$i][$j];
-			//if (_SRD_) echo $varcost[$i][$j] . ", ";
+			if (_SRD_) echo $varcost[$i][$j] . ", ";
 		}
-		//if (_SRD_) echo "<br>";
+		if (_SRD_) echo "<br>";
 	}
-	//if (_SRD_) echo "<br>";
+	if (_SRD_) echo "<br>";
 
 
 	if (_SRD_) echo "<b>Total Cost</b>";
@@ -534,7 +545,8 @@ for ($g = 0; $g <= $generasi; $g++) {
 			$total_tcAcuan = $total_tc[$index_key[0]];
 			$total_cfAcuan = $total_cf[$index_key[0]];
 			$fitnessAcuan  = $fitness[$index_key[0]]; //(_MP_ == 'max' ? max($fitness) : min($fitness));
-			$kromosomAcuan = serialize($kProses[$index_key[0]]);
+			$kromosomAcuan = json_encode($kProses[$index_key[0]]);
+			fSimpanData($g, $kProses[$index_key[0]], $cargoterangkut[$index_key[0]], $tc[$index_key[0]]);
 		}
 		else {
 			if (_MP_ == 'max') {
@@ -542,7 +554,8 @@ for ($g = 0; $g <= $generasi; $g++) {
 					$total_tcAcuan = $total_tc[$index_key[0]];
 					$total_cfAcuan = $total_cf[$index_key[0]];
 					$fitnessAcuan  = $fitness[$index_key[0]]; //(_MP_ == 'max' ? max($fitness) : min($fitness));
-					$kromosomAcuan = serialize($kProses[$index_key[0]]);
+					$kromosomAcuan = json_encode($kProses[$index_key[0]]);
+					fSimpanData($g, $kProses[$index_key[0]], $cargoterangkut[$index_key[0]], $tc[$index_key[0]]);
 				}
 				else {
 				}
@@ -554,7 +567,8 @@ for ($g = 0; $g <= $generasi; $g++) {
 					$total_tcAcuan = $total_tc[$index_key[0]];
 					$total_cfAcuan = $total_cf[$index_key[0]];
 					$fitnessAcuan  = $fitness[$index_key[0]]; //(_MP_ == 'max' ? max($fitness) : min($fitness));
-					$kromosomAcuan = serialize($kProses[$index_key[0]]);
+					$kromosomAcuan = json_encode($kProses[$index_key[0]]);
+					fSimpanData($g, $kProses[$index_key[0]], $cargoterangkut[$index_key[0]], $tc[$index_key[0]]);
 				}
 			}
 		}
@@ -581,8 +595,8 @@ for ($g = 0; $g <= $generasi; $g++) {
 		if (_SRD_) echo "<pre>";
 		if (_SRD_) echo "lewat pertama : ".$lewatPertama."<br>";
 		if (_SRD_) echo "simpanSama    : ".$simpanSama."<br>";
-		if (_SRD_) echo "kSimpan       : ".serialize($kSimpan)."<br>";
-		if (_SRD_) echo "kromosomAcuan : ".serialize($kromosomAcuan)."<br>";
+		if (_SRD_) echo "kSimpan       : ".json_encode($kSimpan)."<br>";
+		if (_SRD_) echo "kromosomAcuan : ".json_encode($kromosomAcuan)."<br>";
 		if (_SRD_) echo "kS == kA      : ".($kSimpan == $kromosomAcuan)."<br>";
 		if (_SRD_) echo "jumlahRepeat  : ".$jumlahRepeat."<br>";
 		if (_SRD_) echo "generasi      : ".$generasi."<br>";
@@ -647,6 +661,12 @@ for ($g = 0; $g <= $generasi; $g++) {
 <?php if ($jumlahKapal > 0 or $jumlahDistribusi > 0) { ?>
 
 <?php $q = "select Demand from t005_distribusi"; $demand = ExecuteRows($q); ?>
+<?php $q = "select * from t103_resultfinal order by id desc"; $r = ExecuteRow($q); ?>
+<?php
+$aOptimum = json_decode($r["optimum"]); //echo "<pre>"; print_r($aOptimum); echo "</pre>";
+$aCargo = json_decode($r["cargo"]);
+$aTotalCost = json_decode($r["totalcost"]);
+?>
 
 <!-- individu optimum -->
 <div class="row">
@@ -681,10 +701,14 @@ for ($g = 0; $g <= $generasi; $g++) {
 			  <?php $totalTc[$d]    = 0; ?>
 			  <?php $totalCargo[$d] = 0; ?>
 			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
-			  <td class="text-right"><?php echo number_format($kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)], 2); ?></td>
-			  <?php   $totalKapal[$k] += $kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
-			  <?php   $totalTc[$d]    += $tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
-			  <?php   $totalCargo[$d] += $cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <!-- <td class="text-right"><?php //echo number_format($kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)], 2); ?></td> -->
+			  <td class="text-right"><?php echo number_format($aOptimum[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)], 2); ?></td>
+			  <!-- <?php   //$totalKapal[$k] += $kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?> -->
+			  <?php   $totalKapal[$k] += $aOptimum[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <!-- <?php   //$totalTc[$d]    += $tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?> -->
+			  <?php   $totalTc[$d]    += $aTotalCost[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <!-- <?php   //$totalCargo[$d] += $cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?> -->
+			  <?php   $totalCargo[$d] += $aCargo[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
 			  <?php } ?>
 			  <td class="text-right"><?php echo number_format($totalTc[$d]); ?></td>
 			  <td class="text-right"><?php echo number_format($totalCargo[$d]); ?></td>
@@ -758,10 +782,14 @@ for ($g = 0; $g <= $generasi; $g++) {
 			  <?php $totalTc[$d]    = 0; ?>
 			  <?php $totalCargo[$d] = 0; ?>
 			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
-			  <td class="text-right"><?php echo number_format($cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]); ?></td>
-			  <?php   $totalKapal[$k] += $kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
-			  <?php   $totalTc[$d]    += $tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
-			  <?php   $totalCargo[$d] += $cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <!-- <td class="text-right"><?php //echo number_format($cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]); ?></td> -->
+			  <td class="text-right"><?php echo number_format($aCargo[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]); ?></td>
+			  <!-- <?php   //$totalKapal[$k] += $kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?> -->
+			  <?php   $totalKapal[$k] += $aOptimum[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <!-- <?php   //$totalTc[$d]    += $tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?> -->
+			  <?php   $totalTc[$d]    += $aTotalCost[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <!-- <?php   //$totalCargo[$d] += $cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?> -->
+			  <?php   $totalCargo[$d] += $aCargo[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
 			  <?php } ?>
 			  <td class="text-right"><?php echo number_format($totalTc[$d]); ?></td>
 			  <td class="text-right"><?php echo number_format($totalCargo[$d]); ?></td>
@@ -835,10 +863,14 @@ for ($g = 0; $g <= $generasi; $g++) {
 			  <?php $totalTc[$d]    = 0; ?>
 			  <?php $totalCargo[$d] = 0; ?>
 			  <?php for ($k = 1; $k <= $jumlahKapal; $k++) { ?>
-			  <td class="text-right"><?php echo number_format($tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]); ?></td>
-			  <?php   $totalKapal[$k] += $kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
-			  <?php   $totalTc[$d]    += $tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
-			  <?php   $totalCargo[$d] += $cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <!-- <td class="text-right"><?php //echo number_format($tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]); ?></td> -->
+			  <td class="text-right"><?php echo number_format($aTotalCost[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]); ?></td>
+			  <?php   //$totalKapal[$k] += $kProses[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php   $totalKapal[$k] += $aOptimum[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php   //$totalTc[$d]    += $tc[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php   $totalTc[$d]    += $aTotalCost[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php   //$totalCargo[$d] += $cargoterangkut[$index_key[0]][(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
+			  <?php   $totalCargo[$d] += $aCargo[(($d * $jumlahKapal)-$jumlahKapal)+($k-1)]; ?>
 			  <?php } ?>
 			  <td class="text-right"><?php echo number_format($totalTc[$d]); ?></td>
 			  <td class="text-right"><?php echo number_format($totalCargo[$d]); ?></td>

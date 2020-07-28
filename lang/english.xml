@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2020/7/14" version="16.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2020/7/28" version="16.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!--
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -856,6 +856,9 @@
   <project>
     <phrase id="bodytitle" value="Distribusi v1.0" />
     <phrase id="footertext" value="&amp;copy;2020 Syariful Alim. All rights reserved." />
+    <menu id="24">
+      <phrase id="menutext" value="t 103 finalresult" />
+    </menu>
     <menu id="21">
       <phrase id="menutext" value="Grafik Brute Force" />
     </menu>
@@ -1258,6 +1261,24 @@
       </field>
       <field id="jumlah">
         <phrase id="fldcaption" value="Jumlah" />
+      </field>
+    </table>
+    <table id="t103_resultfinal">
+      <phrase id="tblcaption" value="t 103 finalresult" />
+      <field id="id">
+        <phrase id="fldcaption" value="id" />
+      </field>
+      <field id="generasi">
+        <phrase id="fldcaption" value="generasi" />
+      </field>
+      <field id="optimum">
+        <phrase id="fldcaption" value="optimum" />
+      </field>
+      <field id="cargo">
+        <phrase id="fldcaption" value="cargo" />
+      </field>
+      <field id="totalcost">
+        <phrase id="fldcaption" value="totalcost" />
       </field>
     </table>
   </project>
